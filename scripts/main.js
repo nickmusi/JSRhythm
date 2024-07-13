@@ -151,7 +151,8 @@ function play(){
                 x += pixPerBeat * vexCodetoRhythmArray(level.rthm[k])[l];
                 y = Math.sign(y) * (Math.abs(y) + Math.sign(y) * pixPerBeat * vexCodetoRhythmArray(level.rthm[k])[l]);
             }
-            playerPathArray[k][l] = document.getElementById("game").height - Math.abs(y);
+            playerPathArray[k][l] = -Math.sign(y) * (document.getElementById("game").height - Math.abs(y) + 0.000000001);
+
             if ((k == level.rthm.length - 1) && (vexCodetoRhythmArray(level.rthm[k])[l + 1] == undefined)){
                 if (Math.sign(y) > 0){
                     path.lineTo(x + 30, y + 30);
@@ -182,6 +183,7 @@ function play(){
     }
     var playerHeight = 0;
     var prevTime = 0;
+    var changed = false;
 
     function animate(){
         const ctx = canvas.getContext("2d");
@@ -191,16 +193,17 @@ function play(){
         var position = pixPerSec * (audio.currentTime - level.offset - Settings.inputOffset) - canvas.width / 2;
 
         if (Math.sign(performance) != Math.sign(multiplier)){
+            changed = true;
 
             if (playerPathArray[j][i - 1] != undefined){
-                multiplier = Math.sign(performance) * Math.abs(playerPathArray[j][i - 1] - playerHeight);
+                multiplier = Math.sign(performance) * Math.abs(Math.abs(playerPathArray[j][i - 1]) - playerHeight) / Math.abs((j * (eval(level.time) * 4) * pixPerBeat) + pixPerBeat * vexCodetoRhythmArray(level.rthm[j]).slice(0, i).reduce((prev, current) => prev + current, 0) - (position + pixPerSec * (level.offset + Settings.inputOffset)));
             }
             else{
-                multiplier = Math.sign(performance) * Math.abs(playerPathArray[j - 1][i] - playerHeight);
-            } 
+                multiplier = Math.sign(performance) * Math.abs(Math.abs(playerPathArray[j - 1][playerPathArray[j - 1].length - 1]) - playerHeight) / Math.abs(((j) * (eval(level.time) * 4) * pixPerBeat) + pixPerBeat * vexCodetoRhythmArray(level.rthm[j]).slice(0, i).reduce((prev, current) => prev + current, 0) - (position + pixPerSec * (level.offset + Settings.inputOffset)));
+            }
 
         }
-        
+
         if (Settings.sheetMusicMode == "scroll"){
             svg.setAttribute("style", "left: " + String(-Math.round(position)) + "px;" + " position: relative;");
         }
@@ -215,12 +218,38 @@ function play(){
         ctx.setTransform(1, 0, 0, 1, -position, 0)
         ctx.stroke(path);
 
-        playerHeight += Math.sign(performance) * pixPerSec * (audio.currentTime - prevTime);
+        playerHeight += multiplier * pixPerSec * (audio.currentTime - prevTime);
         if (playerHeight > canvas.height){
             playerHeight = 0;
+            if (!changed){
+                if (playerPathArray[j][i + 1] != undefined){
+                    multiplier = Math.sign(performance) * Math.abs(Math.abs(playerPathArray[j][i]) - playerHeight) / Math.abs((j * (eval(level.time) * 4) * pixPerBeat) + pixPerBeat * vexCodetoRhythmArray(level.rthm[j]).slice(0, i + 1).reduce((prev, current) => prev + current, 0) - (position + pixPerSec * (level.offset + Settings.inputOffset)));
+                }
+                else{
+                    multiplier = Math.sign(performance) * Math.abs(Math.abs(playerPathArray[j][i]) - playerHeight) / Math.abs(((j + 1) * (eval(level.time) * 4) * pixPerBeat) + pixPerBeat * vexCodetoRhythmArray(level.rthm[j + 1]).slice(0, 0).reduce((prev, current) => prev + current, 0) - (position + pixPerSec * (level.offset + Settings.inputOffset)));
+                }
+                changed = true;
+            }
+            else{
+                multiplier = performance;
+            }
+            console.log(multiplier);
         }
         if (playerHeight < 0){
             playerHeight = canvas.height;
+            if (!changed){
+                if (playerPathArray[j][i + 1] != undefined){
+                    multiplier = Math.sign(performance) * Math.abs(Math.abs(playerPathArray[j][i]) - playerHeight) / Math.abs((j * (eval(level.time) * 4) * pixPerBeat) + pixPerBeat * vexCodetoRhythmArray(level.rthm[j]).slice(0, i + 1).reduce((prev, current) => prev + current, 0) - (position + pixPerSec * (level.offset + Settings.inputOffset)));
+                }
+                else{
+                    multiplier = Math.sign(performance) * Math.abs(Math.abs(playerPathArray[j][i]) - playerHeight) / Math.abs(((j + 1) * (eval(level.time) * 4) * pixPerBeat) + pixPerBeat * vexCodetoRhythmArray(level.rthm[j + 1]).slice(0, 0).reduce((prev, current) => prev + current, 0) - (position + pixPerSec * (level.offset + Settings.inputOffset)));
+                }
+                changed = true;
+            }
+            else{
+                multiplier = performance;
+            }
+            console.log(multiplier);
         }
         prevTime = audio.currentTime;
 
