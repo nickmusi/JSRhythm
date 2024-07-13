@@ -211,9 +211,8 @@ function play(){
             if (Math.abs(multiplier) <= (Settings.threshold * pixPerBeat) / (canvas.height - Settings.threshold * pixPerBeat)){
                 multiplier = performance;
             }
-            else{
-                playerTrailPath.lineTo(position + canvas.width / 2, canvas.height - playerHeight);
-            }
+            
+            playerTrailPath.lineTo(position + canvas.width / 2, canvas.height - playerHeight);
         }
 
         if (Settings.sheetMusicMode == "scroll"){
@@ -227,7 +226,7 @@ function play(){
             ctx.clearRect((level.rthm.length * (eval(level.time) * 4)) * pixPerBeat - position, 0, pixPerBeat * 4, canvas.height);
         }
         var rendered = new Path2D(playerTrailPath);
-        if (position >= 0){rendered.lineTo(position + canvas.width / 2, canvas.height - playerHeight);}
+        if (position + canvas.width / 2 >= 0){rendered.lineTo(position + canvas.width / 2, canvas.height - playerHeight);}
         ctx.setTransform(1, 0, 0, 1, -position, 0);
         ctx.lineWidth = pixPerBeat * Settings.threshold + Dev.playerWidth;
         ctx.strokeStyle = "rgb(255, 255, 255)";
