@@ -11,7 +11,7 @@ var Dev = {
 var secsPerBeat;
 var millisPerBeat;
 
-fetch("test level.json")//#
+/*fetch("test level.json")//#
     .then((response) => response.json())
     .then((info) => {
         level = info;
@@ -23,7 +23,7 @@ fetch("test level.json")//#
         //editor();
         play();
         document.getElementById("audio").hidden = false;
-});
+});*/
 
 function play(){
     var failTimeID;

@@ -1,23 +1,66 @@
-<button id="go">Start!</button>
-<div id="sheetMusic" position="relative"></div>
-<div id="player">
-    <canvas id="game" width=1000 height=400></canvas>
-    <audio id="audio" hidden controls src="resources/JSRhythm Test Edit 1 Export 1.mp3"></audio>
-    <div hidden id="failMenu" width="50vw" height="50vh"></div>
-</div>
-<div hidden id="editor">
-    <button id="16">16</button>
-    <button id="8">8</button>
-    <button id="4">Q</button>
-    <button id="2">H</button>
-    <button id="1">W</button>
-    <button id=".">.</button>  
-    <button id="tie">U</button>  
-    <input type="checkbox" id="tuplet">3[</input>
-    <input id="notes"type="number">
-    <input id="length" type="number" value="2">
-    <input type="checkbox" id="rest">r</input>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Tonic relation is an open source ear training web application that turns ear training into a game!">
+    <link href="style.css" rel="stylesheet">
+    <title>JSRhythm</title>
+    <link rel="icon" href="resources/logo.svg">
+</head>
+<body>
+<div name="all" style="
+    display: grid;
+    width: 100vw;
+    height: 100vh;">
+    <div hidden id="mainMenu">
+        <div style="
+            display: flex;
+            align-content: center;
+            justify-items: unset;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+            flex-wrap: wrap;">
+            <p style="font-size: max(35px, 5vw);">JSRhythm</p>
+            <div style="width: 100%"></div>
+            <button class="menuButton">Play</button>
+            <button class="menuButton">Editor</button>
+            <div style="width: 100%"></div>
+            <button class="menuButton">Character</button>
+            <button class="menuButton">Settings</button>
+        </div>
+    </div>
+    <div class="menus" id="pauseMenu">
+            <p style="font-size: max(35px, 5vw);">JSRhythm</p>
+            <div style="width: 100%"></div>
+            <button class="menuButton">Home</button>
+            <button class="menuButton">Retry</button>
+            <button class="menuButton">Settings</button>
+            <div style="width: 100%; height: max(30px, 7vw);"></div>
+            <button>Close</button>
+    </div>
+    <div id="sheetMusic" position="relative"></div>
+    <div hidden id="player">
+        <canvas id="game" width=1000 height=400></canvas>
+        <audio id="audio" hidden controls src="resources/JSRhythm Test Edit 1 Export 1.mp3"></audio>
+        <div hidden id="failMenu" width="50vw" height="50vh"></div>
+    </div>
+    <div hidden id="editor">
+        <button id="16">16</button>
+        <button id="8">8</button>
+        <button id="4">Q</button>
+        <button id="2">H</button>
+        <button id="1">W</button>
+        <button id=".">.</button>  
+        <button id="tie">U</button>  
+        <input type="checkbox" id="tuplet">3[</input>
+        <input id="notes"type="number">
+        <input id="length" type="number" value="2">
+        <input type="checkbox" id="rest">r</input>
+    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.4/build/cjs/vexflow.js"></script>
 <script src="scripts/main.js"></script>
 <script src="scripts/render.js"></script>
+</body>
+</html>
