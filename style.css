@@ -1,3 +1,7 @@
+[hidden] {
+    display: none !important 
+}
+
 .menuButton{
     height: max(70px, 10vw);
     width: max(70px, 10vw);

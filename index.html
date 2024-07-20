@@ -12,38 +12,10 @@
     display: grid;
     width: 100vw;
     height: 100vh;">
-    <div hidden id="mainMenu">
-        <div style="
-            display: flex;
-            align-content: center;
-            justify-items: unset;
-            justify-content: center;
-            width: 100vw;
-            height: 100vh;
-            flex-wrap: wrap;">
-            <p style="font-size: max(35px, 5vw);">JSRhythm</p>
-            <div style="width: 100%"></div>
-            <button class="menuButton">Play</button>
-            <button class="menuButton">Editor</button>
-            <div style="width: 100%"></div>
-            <button class="menuButton">Character</button>
-            <button class="menuButton">Settings</button>
-        </div>
-    </div>
-    <div class="menus" id="pauseMenu">
-            <p style="font-size: max(35px, 5vw);">JSRhythm</p>
-            <div style="width: 100%"></div>
-            <button class="menuButton">Home</button>
-            <button class="menuButton">Retry</button>
-            <button class="menuButton">Settings</button>
-            <div style="width: 100%; height: max(30px, 7vw);"></div>
-            <button>Close</button>
-    </div>
-    <div id="sheetMusic" position="relative"></div>
-    <div hidden id="player">
+    <div hidden id="sheetMusic" position="relative"></div>
+    <div  hidden id="player">
         <canvas id="game" width=1000 height=400></canvas>
         <audio id="audio" hidden controls src="resources/JSRhythm Test Edit 1 Export 1.mp3"></audio>
-        <div hidden id="failMenu" width="50vw" height="50vh"></div>
     </div>
     <div hidden id="editor">
         <button id="16">16</button>
@@ -57,6 +29,81 @@
         <input id="notes"type="number">
         <input id="length" type="number" value="2">
         <input type="checkbox" id="rest">r</input>
+    </div>
+    <div id="mainMenu" style="
+        display: flex;
+        position: absolute;
+        background: white;
+        top: 0;
+        align-content: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        flex-wrap: wrap;">
+        <p style="font-size: max(35px, 5vw);">JSRhythm</p>
+        <div style="width: 100%"></div>
+        <button name="play" class="menuButton">Play</button>
+        <button name="editor" class="menuButton">Editor</button>
+        <div style="width: 100%"></div>
+        <button class="menuButton">Character</button>
+        <button name="settings" class="menuButton">Settings</button>
+    </div>
+    <div hidden class="menus" id="pauseMenu">
+        <p style="font-size: max(35px, 5vw); margin: 0px;">JSRhythm</p>
+        <div style="width: 100%"></div>
+        <p>Error</p>
+        <div style="width: 100%"></div>
+        <button name="home" class="menuButton">Home</button>
+        <button name="retry" class="menuButton">Retry</button>
+        <button name="settings" class="menuButton">Settings</button>
+        <div style="width: 100%; height: max(30px, 7vw);"></div>
+        <button name="close">Close</button>
+    </div>
+    <div hidden class="menus" id="failMenu">
+        <p style="font-size: max(35px, 5vw); margin: 0px;">JSRhythm</p>
+        <div style="width: 100%"></div>
+        <p>Error</p>
+        <div style="width: 100%"></div>
+        <button name="home" class="menuButton">Home</button>
+        <button name="retry" class="menuButton">Retry</button>
+        <button name="settings" name="settings" class="menuButton">Settings</button>
+    </div>
+    <div hidden class="menus" id="winMenu">
+        <p style="font-size: max(35px, 5vw); margin: 0px;">JSRhythm</p>
+        <div style="width: 100%"></div>
+        <p>Error</p>
+        <div style="width: 100%"></div>
+        Stars
+        <div style="width: 100%"></div>
+        <button class="menuButton">Home</button>
+        <button class="menuButton">Retry</button>
+        <button class="menuButton">Next</button>
+        <div style="width: 100%; height: max(30px, 7vw);"></div>
+    </div>
+    <div hidden class="menus" id="settingsMenu">
+        <p style="font-size: max(35px, 5vw); margin: 0px;">Settings</p>
+        <div style="width: 100%"></div>
+        <input type="number" min="0" max="1" step="0.01" value="0.3" id="threshold">
+        <div style="width: 100%"></div>
+        <input type="number" step="any" value="0" id="inputOffset">
+        <div style="width: 100%"></div>
+        Correction mode
+        <div style="width: 100%"></div>
+        <input title="Changes to correction mode will take effect the next time you start a level" type="radio" checked id="snap" name="correction" value="snap" />
+        <label title="Changes to correction mode will take effect the next time you start a level" for="snap">Snap</label>
+
+        <input title="Changes to correction mode will take effect the next time you start a level" type="radio" id="slope" name="correction" value="slope" />
+        <label title="Changes to correction mode will take effect the next time you start a level" for="slope">Gradual</label>
+        <div style="width: 100%;"></div>
+        Sheet music mode
+        <div style="width: 100%"></div>
+        <input title="Changes to sheet music mode will take effect the next time you start a level" type="radio" checked id="scroll" name="museMode" value="scroll" />
+        <label title="Changes to sheet music mode will take effect the next time you start a level" for="scroll">Scroll</label>
+
+        <input title="Changes to sheet music mode will take effect the next time you start a level" type="radio" id="line" name="museMode" value="line" />
+        <label title="Changes to sheet music mode will take effect the next time you start a level" for="line">Appear</label>
+        <div style="width: 100%;"></div>
+        <button name="settingsClose">Close</button>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.4/build/cjs/vexflow.js"></script>

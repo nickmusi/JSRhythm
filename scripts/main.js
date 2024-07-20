@@ -10,6 +10,8 @@ var Dev = {
 }
 var secsPerBeat;
 var millisPerBeat;
+var globalAbort = new AbortController();
+var inputBool = true;
 
 /*fetch("test level.json")//#
     .then((response) => response.json())
@@ -22,23 +24,107 @@ var millisPerBeat;
         
         //editor();
         play();
-        document.getElementById("audio").hidden = false;
 });*/
 
+function menus(){
+    const abort = new AbortController();
+    inputBool = false;
+    document.addEventListener("click", (event) => {inputs(event);}, {signal: abort.signal});
+
+    function inputs(event){
+        var name = event.target.name;
+
+        if (name == "settings"){
+            document.getElementById("settingsMenu").hidden = false;
+        }
+        if (name == "play"){
+            fetch("test level.json")//#
+            .then((response) => response.json())
+            .then((info) => {
+                level = info;
+                secsPerBeat = (1 / level.bpm) * 60;
+                millisPerBeat = secsPerBeat * 1000;
+                pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);
+                pixPerSec = pixPerBeat / secsPerBeat;
+                play();
+            });
+            abort.abort();
+            event.target.parentElement.hidden = true;
+        }
+        if (name == "editor"){
+            globalAbort.abort();
+            globalAbort = new AbortController();
+            editor();
+            event.target.parentElement.hidden = true;
+            abort.abort();
+        }
+        if (name == "retry"){
+            globalAbort.abort();
+            globalAbort = new AbortController();
+            abort.abort();
+            play();
+            event.target.parentElement.hidden = true;
+        }
+        if (name == "home"){
+            abort.abort();
+            globalAbort.abort();
+            globalAbort = new AbortController();
+            event.target.parentElement.hidden = true;
+            document.getElementById("player").hidden = true;
+        document.getElementById("sheetMusic").hidden = true;
+            document.getElementById("mainMenu").hidden = false;
+            menus();
+        }
+        if (name == "close"){
+            event.target.parentElement.hidden = true;
+            inputBool = true;
+            document.getElementById("audio").play();
+            abort.abort();
+        }
+        if (name == "settingsClose"){
+            event.target.parentElement.hidden = true;
+            Settings.threshold = Number(document.getElementById("threshold").value);
+            Settings.inputOffset = Number(document.getElementById("inputOffset").value);
+        }
+    }
+}
+
+menus();
+
 function play(){
+    Settings.correctionMode = document.querySelector('input[name="correction"]:checked').value;
+    Settings.sheetMusicMode = document.querySelector('input[name="museMode"]:checked').value;
+    document.getElementById("player").hidden = false;
+    document.getElementById("sheetMusic").hidden = false;
     var failTimeID;
+    var time;
     var audio = document.getElementById("audio");
+    inputBool = true;
+    audio.currentTime = 0;
     var error;
     var i = 0;
     var j = 0;
     var performance = 0;
-    document.getElementById("audio").addEventListener("playing", () => {playEvents();});
-    document.getElementById("audio").addEventListener("seeking", () => {pauseEvents();});
-    document.getElementById("audio").addEventListener("seeked", () => {if(!audio.paused){playEvents();}});
-    document.getElementById("audio").addEventListener("waiting", () => {pauseEvents();});
-    document.getElementById("audio").addEventListener("pause", () => {pauseEvents();});
-    document.addEventListener("click", userPerformance);
-    addEventListener("keypress", userPerformance);
+    document.getElementById("audio").addEventListener("playing", () => {playEvents();}, {signal: globalAbort.signal});
+    document.getElementById("audio").addEventListener("seeking", () => {pauseEvents();}, {signal: globalAbort.signal});
+    document.getElementById("audio").addEventListener("seeked", () => {if(!audio.paused){playEvents();}}, {signal: globalAbort.signal});
+    document.getElementById("audio").addEventListener("waiting", () => {pauseEvents();}, {signal: globalAbort.signal});
+    document.getElementById("audio").addEventListener("pause", () => {pauseEvents();}, {signal: globalAbort.signal});
+    document.addEventListener("click", () => {if (inputBool){userPerformance()}}, {signal: globalAbort.signal});
+    addEventListener("keydown", (e) => {
+        if (inputBool){
+            if (e.key == "Escape"){
+                inputBool == false;
+                audio.pause();
+                document.getElementById("pauseMenu").hidden = false;
+                clearTimeout(failTimeID);
+                menus();
+            }
+            else{
+                userPerformance();
+            }
+        }
+    }, {signal: globalAbort.signal});
 
     audio.play();
 
@@ -70,22 +156,17 @@ function play(){
         else{
             time = 1000 * ((j * (eval(level.time) * 4) * secsPerBeat) + secsPerBeat * vexCodetoRhythmArray(level.rthm[j]).slice(0, i + 1).reduce((prev, current) => prev + current, 0) - (document.getElementById("audio").currentTime - level.offset));
         }
+        clearTimeout(failTimeID);
         failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time, millisPerBeat * Settings.threshold));
     }
 
     function fail(){
         clearTimeout(failTimeID);
         audio.pause();
+        //console.log("Incorrect! Error " + String(Math.round(100 * error)) + "%");
         document.getElementById("failMenu").hidden = false;
-        console.log("Incorrect! Error " + String(Math.round(100 * error)) + "%");
-        if (vexCodetoRhythmArray(level.rthm[j])[i + 1] == undefined){
-            j++;
-            i = 0;
-        }
-        else{
-            i++;
-        }
-        playEvents();
+        menus();
+        //playEvents();
     }
     
     function playEvents(){
@@ -106,6 +187,7 @@ function play(){
         else{
             time = 1000 * ((j * (eval(level.time) * 4) * secsPerBeat) + secsPerBeat * vexCodetoRhythmArray(level.rthm[j]).slice(0, i + 1).reduce((prev, current) => prev + current, 0) - (document.getElementById("audio").currentTime - level.offset));
         }
+        clearTimeout(failTimeID);
         failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time, millisPerBeat * Settings.threshold));
         if(Settings.sheetMusicMode == "line"){render(level.rthm, j);}
     }
@@ -246,8 +328,7 @@ function play(){
         }
 
         if (Settings.sheetMusicMode == "scroll"){
-            svg.setAttribute("style", "left: " + String(-Math.round(position)) + "px;" + " position: relative;");
-        }
+            svg.setAttribute("style", "left: " + String(-Math.round(position)) + "px;" + " position: relative;");        }
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -430,7 +511,7 @@ function rhythmArraytoVexflow(array = []){
 
 function editor(){
     document.getElementById("editor").hidden = false;
-    document.addEventListener("click", (event) => inputs(event));
+    document.addEventListener("click", (event) => inputs(event), {signal: globalAbort.signal});
 
     var rthm = ["[].concat("];//
     var measure = 0;
