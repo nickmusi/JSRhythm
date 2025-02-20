@@ -15,7 +15,7 @@
     <div hidden id="sheetMusic" position="relative"></div>
     <div  hidden id="player">
         <canvas id="game" width=1000 height=400></canvas>
-        <audio id="audio" hidden controls src="resources/JSRhythm Test Edit 1 Export 1.mp3"></audio>
+        <audio id="audio" hidden controls src=""></audio>
     </div>
     <div hidden id="editor">
         <button id="16">16</button>
@@ -29,6 +29,8 @@
         <input id="notes"type="number">
         <input id="length" type="number" value="2">
         <input type="checkbox" id="rest">r</input>
+        <input type="number" value="0" placeholder="Measure" id="measure">
+        <button id="delete">X</button>
     </div>
     <div id="mainMenu" style="
         display: flex;
@@ -105,6 +107,38 @@
         <div style="width: 100%;"></div>
         <button name="settingsClose">Close</button>
     </div>
+    <div hidden class="menus" id="editorMenu">
+        <p style="font-size: max(35px, 5vw); margin: 0px;">Settings</p>
+        <div style="width: 100%"></div>
+        <input pattern="\d\/" id="time" value="4/4">
+        <div style="width: 100%"></div>
+        <input type="number" step="any" value="120" id="bpm">
+        <div style="width: 100%"></div>
+        Offset
+        <div style="width: 100%"></div>
+        <input title="Seconds after the track starting that you want the level to start." type="number" id="offset" value="0" />
+        <div style="width: 100%"></div>
+        <input title="Title of level" id="title" value="Title" />
+        <div style="width: 100%"></div>
+        <input title="Composer of the song" id="artist" value="Artist" />
+        <div style="width: 100%"></div>
+        Audio file:
+        <div style="width: 100%"></div>
+        <input type="file" accept="audio/*" id="location">
+        <div style="width: 100%"></div>
+        <input title="Creator of the level" id="creator" value="Creator" />
+        <div style="width: 100%"></div>
+        <input title="Difficulty of the level" id="difficulty" value="Difficulty" />
+        <div style="width: 100%; height: 5%;"></div>
+        Load level:
+        <div style="width: 100%"></div>
+        <input multiple="false" type="file" id="levelFile" name="load">
+        <div style="width: 100%"></div>
+        <button name="save">Save</button>
+        <button name="edSettingsClose">Close</button>
+        <button name="home">Home</button>
+    </div>
+    
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.4/build/cjs/vexflow.js"></script>
 <script src="scripts/main.js"></script>

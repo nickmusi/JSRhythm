@@ -1,6 +1,35 @@
-var level = {};
+var level = {
+        "time": "4/4",
+        "bpm": 120,
+        "offset": 2.5,
+        "title": null,
+        "artist": null,
+        "location": null,
+        "creator": null,
+        "difficulty": null,
+        "rthm":
+        [
+            "score.notes('B4/1')",
+            "score.notes('B4/1')",
+            "score.notes('B4/1')",
+            "score.notes('B4/1')",
+            
+            "[].concat(score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), )",
+            "[].concat(score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), )",
+            "[].concat(score.notes('B4/8.'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/16'), score.notes('B4/8.'), )",
+            "[].concat(score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), )",
+            "score.notes('B4/1')",
+            "score.notes('B4/1')",
+            "score.notes('B4/8., B4/16, B4/8, B4/16').concat(tie(score.notes('B4/16, B4/16'))).concat(score.notes('B4/16, B4/8, B4/8, B4/8'))",
+            "[].concat(score.notes('B4/8.'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/16'), score.notes('B4/8.'), )",
+            "[].concat(score.notes('B4/8.'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), )",
+            "score.notes('B4/8., B4/16, B4/8, B4/16').concat(tie(score.notes('B4/16, B4/16'))).concat(score.notes('B4/16, B4/8, B4/8, B4/8'))",
+            "score.notes('B4/8, B4/8, B4/4, B4/2')"
+            
+        ]
+};
 var Settings = {
-    inputOffset: 0,
+    inputOffset: 0.25,
     threshold: 0.3,
     sheetMusicMode: "scroll",
     correctionMode: "snap"
@@ -13,18 +42,6 @@ var millisPerBeat;
 var globalAbort = new AbortController();
 var inputBool = true;
 
-/*fetch("test level.json")//#
-    .then((response) => response.json())
-    .then((info) => {
-        level = info;
-        secsPerBeat = (1 / level.bpm) * 60;
-        millisPerBeat = secsPerBeat * 1000;
-        pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);
-        pixPerSec = pixPerBeat / secsPerBeat;
-        
-        //editor();
-        play();
-});*/
 
 function menus(){
     const abort = new AbortController();
@@ -54,9 +71,10 @@ function menus(){
         if (name == "editor"){
             globalAbort.abort();
             globalAbort = new AbortController();
+            inputBool = false;
             editor();
             event.target.parentElement.hidden = true;
-            abort.abort();
+            document.getElementById("editorMenu").hidden = false;
         }
         if (name == "retry"){
             globalAbort.abort();
@@ -71,7 +89,7 @@ function menus(){
             globalAbort = new AbortController();
             event.target.parentElement.hidden = true;
             document.getElementById("player").hidden = true;
-        document.getElementById("sheetMusic").hidden = true;
+            document.getElementById("sheetMusic").hidden = true;
             document.getElementById("mainMenu").hidden = false;
             menus();
         }
@@ -81,10 +99,34 @@ function menus(){
             document.getElementById("audio").play();
             abort.abort();
         }
+        if (name == "edSettingsClose"){
+            event.target.parentElement.hidden = true;
+            for (i in level){
+                if (String(i) != 'rthm'){
+                    level[i] = document.getElementById(String(i)).value;
+                }
+            }
+            if(document.getElementById("levelFile").value == ""){
+                level.rthm = ["[].concat("];
+            }
+            abort.abort();
+            setTimeout(()=>{inputBool = true;}, 0.1);
+        }
         if (name == "settingsClose"){
             event.target.parentElement.hidden = true;
             Settings.threshold = Number(document.getElementById("threshold").value);
             Settings.inputOffset = Number(document.getElementById("inputOffset").value);
+        }
+        if (name == "save"){
+            downloadBlob(new Blob([JSON.stringify(level, null, 4)]), "level.json")
+        }
+        if (name == "load"){
+            event.target.addEventListener("change", ()=>{
+                event.target.files[0].text()
+                .then((text) =>{
+                    level = JSON.parse(text);
+                });
+            }, {signal: abort.signal});
         }
     }
 }
@@ -99,6 +141,7 @@ function play(){
     var failTimeID;
     var time;
     var audio = document.getElementById("audio");
+    audio.setAttribute("src", level.location)
     inputBool = true;
     audio.currentTime = 0;
     var error;
@@ -510,69 +553,73 @@ function rhythmArraytoVexflow(array = []){
 }
 
 function editor(){
-    document.getElementById("editor").hidden = false;
-    document.addEventListener("click", (event) => inputs(event), {signal: globalAbort.signal});
-
-    var rthm = ["[].concat("];//
     var measure = 0;
     var endParen = ")";
+
+    document.getElementById("editor").hidden = false;
+    document.getElementById("sheetMusic").hidden = false;
+    document.addEventListener("click", (event) => {if (inputBool && event.target.id != "measure"){inputs(event)};}, {signal: globalAbort.signal});
+    document.addEventListener("keydown", (event) => {if (inputBool){inputs(event)};}, {signal: globalAbort.signal});
+    document.getElementById("measure").addEventListener("change", (event) => {measure = Number(event.target.value); editRender(level.rthm, measure);}, {signal: globalAbort.signal});
+    
+//#newly loaded score only shows when updating measure location. Appending scores has some bugs
 
     function inputs(event){
         var id = event.srcElement.id;
         if (id == "1"){
             if (document.getElementById("rest").checked){
-                rthm[measure] = rthm[measure].concat("score.notes('D5/1/r'), ")
+                level.rthm[measure] =level.rthm[measure].concat("score.notes('D5/1/r'), ")
             }
             else{
-                rthm[measure] = rthm[measure].concat("score.notes('B4/1'), ")
+               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/1'), ")
             }
         }
         if (id == "2"){
             if (document.getElementById("rest").checked){
-                rthm[measure] = rthm[measure].concat("score.notes('B4/2/r'), ");
+               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/2/r'), ");
             }
             else{
-                rthm[measure] = rthm[measure].concat("score.notes('B4/2'), ");
+               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/2'), ");
             }
         }
         if (id == "4"){
             if (document.getElementById("rest").checked){
-                rthm[measure] = rthm[measure].concat("score.notes('B4/4/r'), ");
+               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/4/r'), ");
             }
             else{
-                rthm[measure] = rthm[measure].concat("score.notes('B4/4'), ");
+               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/4'), ");
             }
         }
         if (id == "8"){
             if (document.getElementById("rest").checked){
-                rthm[measure] = rthm[measure].concat("score.notes('B4/8/r'), ");
+               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/8/r'), ");
             }
             else{
-                rthm[measure] = rthm[measure].concat("score.notes('B4/8'), ");
+               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/8'), ");
             }
         }
         if (id == "16"){
             if (document.getElementById("rest").checked){
-                rthm[measure] = rthm[measure].concat("score.notes('B4/16/r'), ");
+               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/16/r'), ");
             }
             else{
-                rthm[measure] = rthm[measure].concat("score.notes('B4/16'), ");
+               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/16'), ");
             }
         }
         if (id == "tie"){
-            var tieHere = rthm[measure].lastIndexOf("score.notes");
-            if (rthm[measure] == "[].concat("){
+            var tieHere =level.rthm[measure].lastIndexOf("score.notes");
+            if (level.rthm[measure] == "[].concat("){
                 alert("Tieing notes across barlines not currently supported!");
             }
             else{
-                rthm[measure] = rthm[measure].slice(0, tieHere) + "tie([].concat(" + rthm[measure].slice(tieHere);
+               level.rthm[measure] =level.rthm[measure].slice(0, tieHere) + "tie([].concat(" +level.rthm[measure].slice(tieHere);
                 endParen = endParen + "))"
             }
         }
         if (id == "."){
-            var here = rthm[measure].match(/(?<=\d+)\D+$/).index;
-            if (vexCodetoRhythmArray(rthm[measure].slice(0, here) + "." + rthm[measure].slice(here) + endParen).reduce((prev, current) => prev + current, 0) <= eval(testCode(level.time)) * 4){
-                rthm[measure] = rthm[measure].slice(0, here) + "." + rthm[measure].slice(here);
+            var here =level.rthm[measure].match(/(?<=\d+)\D+$/).index;
+            if (vexCodetoRhythmArray(level.rthm[measure].slice(0, here) + "." +level.rthm[measure].slice(here) + endParen).reduce((prev, current) => prev + current, 0) <= eval(testCode(level.time)) * 4){
+               level.rthm[measure] =level.rthm[measure].slice(0, here) + "." +level.rthm[measure].slice(here);
             }
             else{
                             alert("Dotting this note exceeds the measure's length!");
@@ -580,34 +627,43 @@ function editor(){
         }
         if (id == "tuplet"){
             if (document.getElementById("tuplet").checked){
-                rthm[measure] = rthm[measure].concat("score.tuplet([].concat(");
+               level.rthm[measure] =level.rthm[measure].concat("score.tuplet([].concat(");
                 endParen = endParen + "))";
             }
             else {
                 var numNotes = document.getElementById("notes").value;
                 var notesOccupied = document.getElementById("length").value;
                 if (numNotes == ""){
-                    numNotes = [...rthm[measure].slice(rthm[measure].lastIndexOf("tuplet(")).matchAll("notes")].length;
+                    numNotes = [...rthm[measure].slice(level.rthm[measure].lastIndexOf("tuplet(")).matchAll("notes")].length;
                 }
-                rthm[measure] = rthm[measure].concat("), {num_notes: " + String(numNotes) +", notes_occupied: " + String(notesOccupied) + "})).concat(");
+               level.rthm[measure] =level.rthm[measure].concat("), {num_notes: " + String(numNotes) +", notes_occupied: " + String(notesOccupied) + "})).concat(");
                 endParen = endParen.replace("))", "");
             } 
         }
         if (id == "go"){
-            console.log(rthm);
+            console.log(level.rthm);
+        }
+        if (event.key == "Escape"){
+            inputBool = false;
+            menus();
+            document.getElementById("editorMenu").hidden = false;
+        }
+        if (id == "delete"){
+            level.rthm[measure] = "[].concat(";
+            endParen = ")"
         }
         if (!(document.getElementById("tuplet").checked)){
-            if (vexCodetoRhythmArray(rthm[measure] + endParen).reduce((prev, current) => prev + current, 0) > eval(testCode(level.time)) * 4){
-                var end = rthm[measure].lastIndexOf("score.notes")
-                rthm[measure] = rthm[measure].slice(0, end);
-                document.getElementById((4 / (eval(testCode(level.time)) * 4 - vexCodetoRhythmArray(rthm[measure] + endParen).reduce((prev, current) => prev + current, 0))).toString()).click();
+            if (vexCodetoRhythmArray(level.rthm[measure] + endParen).reduce((prev, current) => prev + current, 0) > eval(testCode(level.time)) * 4){
+                var end =level.rthm[measure].lastIndexOf("score.notes")
+               level.rthm[measure] =level.rthm[measure].slice(0, end);
+                document.getElementById((4 / (eval(testCode(level.time)) * 4 - vexCodetoRhythmArray(level.rthm[measure] + endParen).reduce((prev, current) => prev + current, 0))).toString()).click();
 
             }
-            if (Number(vexCodetoRhythmArray(rthm[measure] + endParen).reduce((prev, current) => prev + current, 0).toFixed(10)) == eval(testCode(level.time)) * 4){
-                rthm[measure] = rthm[measure] + endParen;
-                editRender(rthm, measure);
+            if (Number(vexCodetoRhythmArray(level.rthm[measure] + endParen).reduce((prev, current) => prev + current, 0).toFixed(10)) == eval(testCode(level.time)) * 4){
+               level.rthm[measure] = level.rthm[measure] + endParen;
+                editRender(level.rthm, measure);
                 measure += 1;
-                rthm[measure] = "[].concat("
+               level.rthm.splice(measure, 0, "[].concat(");
                 endParen = ")";
             }
         }
@@ -624,3 +680,15 @@ function testCode(code){
         console.log(code.matchAll(/score|notes|tuplet|{num_|:|_occupied|}|\[]\.concat|concat|tie|r|\.|\(|\)|"|'|[A-G]|\/|\d| |,/g).reduce((prev, current) => prev + current, 0).slice(1));
     }
 }
+
+
+async function downloadBlob(inputblob, name) {
+    const downloadelem = document.createElement("a");
+    const url = URL.createObjectURL(inputblob);
+    document.body.appendChild(downloadelem);
+    downloadelem.href = url;
+    downloadelem.download = name;
+    downloadelem.click();
+    downloadelem.remove();
+    window.URL.revokeObjectURL(url);
+  }
