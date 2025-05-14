@@ -17,6 +17,31 @@ function newMeasure(vexCode = "", width = 200, options = {time: "-1", key: "-1",
   if (vexCode.indexOf("(newMeasure") != -1){
     vexCode = vexCode.slice(0, vexCode.indexOf("(newMeasure") - 7);
   }
+  var remain = eval(testCode(level.time)) * 4 - vexCodetoRhythmArray(vexCode).reduce((prev, current) => prev + current, 0);//this isn't doing anything#
+  if (remain == 0){
+    vexCode = "(" + vexCode
+  }
+  if (Math.floor(remain / 4) > 0){
+      vexCode += "score.notes('B4/1/r'),";
+      remain += -4;
+  }
+  if (Math.floor(remain / 2) > 0){
+      vexCode += "score.notes('B4/2/r'),";
+      remain += -2;
+  }
+  if (Math.floor(remain / 1) > 0){
+      vexCode += "score.notes('B4/4/r'),";
+      remain += -1;
+  }
+  if (Math.floor(remain / 0.5) > 0){
+      vexCode += "score.notes('B4/8/r'),";
+      remain += -0.5;
+  }
+  if (Math.floor(remain / 0.25) > 0){
+      vexCode += "score.notes('B4/16/r'),";
+      remain += -0.25;
+  }
+  vexCode += ")";//I know this isn't doing anything
   vexCode = eval(testCode(vexCode));
   var voice = score.voice(vexCode);
   if (options.time != undefined && options.time != "-1"){

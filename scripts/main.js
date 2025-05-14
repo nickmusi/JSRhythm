@@ -29,7 +29,7 @@ var level = {
         ]
 };
 var Settings = {
-    inputOffset: 0.25,
+    inputOffset: 0.025,
     threshold: 0.3,
     sheetMusicMode: "scroll",
     correctionMode: "snap"
@@ -55,7 +55,9 @@ function menus(){
             document.getElementById("settingsMenu").hidden = false;
         }
         if (name == "play"){
-            fetch("test level.json")//#
+
+            selector();
+            /*fetch("test level.json")//#
             .then((response) => response.json())
             .then((info) => {
                 level = info;
@@ -64,7 +66,7 @@ function menus(){
                 pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);
                 pixPerSec = pixPerBeat / secsPerBeat;
                 play();
-            });
+            });*/
             abort.abort();
             event.target.parentElement.hidden = true;
         }
@@ -90,6 +92,7 @@ function menus(){
             event.target.parentElement.hidden = true;
             document.getElementById("player").hidden = true;
             document.getElementById("sheetMusic").hidden = true;
+            document.getElementById("editor").hidden = true;
             document.getElementById("mainMenu").hidden = false;
             menus();
         }
@@ -560,12 +563,48 @@ function editor(){
     document.getElementById("sheetMusic").hidden = false;
     document.addEventListener("click", (event) => {if (inputBool && event.target.id != "measure"){inputs(event)};}, {signal: globalAbort.signal});
     document.addEventListener("keydown", (event) => {if (inputBool){inputs(event)};}, {signal: globalAbort.signal});
-    document.getElementById("measure").addEventListener("change", (event) => {measure = Number(event.target.value); editRender(level.rthm, measure);}, {signal: globalAbort.signal});
+    document.getElementById("measure").addEventListener("change", (event) => {editRender(level.rthm, Number(event.target.value));}, {signal: globalAbort.signal});
     
 //#newly loaded score only shows when updating measure location. Appending scores has some bugs
 
     function inputs(event){
         var id = event.srcElement.id;
+
+        if (measure != Number(document.getElementById("measure").value)){
+
+            if (measure >= 0 ){
+                var remain = eval(testCode(level.time)) * 4 - vexCodetoRhythmArray(level.rthm[measure] + endParen).reduce((prev, current) => prev + current, 0);
+                if (Math.floor(remain / 4) > 0){
+                    level.rthm[measure] += "score.notes('B4/1/r'),";
+                    remain += -4;//#this fills end of measures with rests. Maybe do this on render to avoid errors?
+                }
+                if (Math.floor(remain / 2) > 0){
+                    level.rthm[measure] += "score.notes('B4/2/r'),";
+                    remain += -2;
+                }
+                if (Math.floor(remain / 1) > 0){
+                    level.rthm[measure] += "score.notes('B4/4/r'),";
+                    remain += -1;
+                }
+                if (Math.floor(remain / 0.5) > 0){
+                    level.rthm[measure] += "score.notes('B4/8/r'),";
+                    remain += -0.5;
+                }
+                if (Math.floor(remain / 0.25) > 0){
+                    level.rthm[measure] += "score.notes('B4/16/r'),";
+                    remain += -0.25;
+                }
+                level.rthm[measure] += endParen;
+            }
+            
+            measure = Number(document.getElementById("measure").value);
+
+            if (id != "delete"){
+                level.rthm.splice(measure, 0, "[].concat(");
+                endParen = ")";
+            }
+        }
+
         if (id == "1"){
             if (document.getElementById("rest").checked){
                 level.rthm[measure] =level.rthm[measure].concat("score.notes('D5/1/r'), ")
@@ -648,26 +687,78 @@ function editor(){
             menus();
             document.getElementById("editorMenu").hidden = false;
         }
-        if (id == "delete"){
-            level.rthm[measure] = "[].concat(";
-            endParen = ")"
-        }
-        if (!(document.getElementById("tuplet").checked)){
+        if ((!(document.getElementById("tuplet").checked) && id != "delete")){
             if (vexCodetoRhythmArray(level.rthm[measure] + endParen).reduce((prev, current) => prev + current, 0) > eval(testCode(level.time)) * 4){
                 var end =level.rthm[measure].lastIndexOf("score.notes")
                level.rthm[measure] =level.rthm[measure].slice(0, end);
-                document.getElementById((4 / (eval(testCode(level.time)) * 4 - vexCodetoRhythmArray(level.rthm[measure] + endParen).reduce((prev, current) => prev + current, 0))).toString()).click();
+                document.getElementById((4 / (eval(testCode(level.time)) * 4 - vexCodetoRhythmArray(level.rthm[measure] + endParen).reduce((prev, current) => prev + current, 0))).toString()).click();//#dotted notes do not auto fill at end of measure
 
             }
-            if (Number(vexCodetoRhythmArray(level.rthm[measure] + endParen).reduce((prev, current) => prev + current, 0).toFixed(10)) == eval(testCode(level.time)) * 4){
+            if (id != "delete"){
+                if (Number(vexCodetoRhythmArray(level.rthm[measure] + endParen).reduce((prev, current) => prev + current, 0).toFixed(10)) == eval(testCode(level.time)) * 4){
                level.rthm[measure] = level.rthm[measure] + endParen;
                 editRender(level.rthm, measure);
-                measure += 1;
-               level.rthm.splice(measure, 0, "[].concat(");
-                endParen = ")";
+                //measure += 1;
+                document.getElementById("measure").value = String(measure + 1);
+                //level.rthm.splice(measure, 0, "[].concat(");
+                endParen = "";
+                }
             }
         }
+        if (id == "delete"){
+            level.rthm.splice(measure, 1);
+            editRender(level.rthm, measure);
+            measure = -5; //Set measure to invalid so when the next botton is hit, html element will be different and update
+            
+        }
     }
+}
+
+function selector(){
+    
+    main = document.getElementById("selector");
+    main.hidden = false;
+    main.replaceChildren();
+
+    fetch("resources/list.json")//#
+            .then((response) => response.json())
+            .then((items) => {
+                for (i in items){
+                    l = main.appendChild(document.createElement("button"));
+                    l.innerHTML = String(i)
+                    l.setAttribute("id", String(items[String(i)]));
+                    l.setAttribute("class", "menuButton")
+                }
+            });
+    document.addEventListener("click", (event) => {
+
+        if (event.target.tagName == "BUTTON"){
+            fetch(event.target.id)//#
+            .then((response) => response.json())
+            .then((info) => {
+                level = info;
+                secsPerBeat = (1 / level.bpm) * 60;
+                millisPerBeat = secsPerBeat * 1000;
+                pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);
+                pixPerSec = pixPerBeat / secsPerBeat;
+                main.hidden = true;
+                globalAbort.abort();
+                globalAbort = new AbortController();
+                play();
+            });
+        }
+
+    }, {signal: globalAbort.signal});
+    document.addEventListener("keydown", (key) => {if (key.key = "Escape"){
+        main.hidden = true;
+        main.replaceChildren();
+        globalAbort.abort();
+        globalAbort = new AbortController();
+        document.getElementById("mainMenu").hidden = false;
+        menus();
+    }}, {signal: globalAbort.signal})
+
+    
 }
 
 function testCode(code){
