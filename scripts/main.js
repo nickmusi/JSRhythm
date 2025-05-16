@@ -47,7 +47,7 @@ function menus(){
     const abort = new AbortController();
     inputBool = false;
     document.addEventListener("click", (event) => {inputs(event);}, {signal: abort.signal});
-
+    use = false;
     function inputs(event){
         var name = event.target.name;
 
@@ -57,16 +57,6 @@ function menus(){
         if (name == "play"){
 
             selector();
-            /*fetch("test level.json")//#
-            .then((response) => response.json())
-            .then((info) => {
-                level = info;
-                secsPerBeat = (1 / level.bpm) * 60;
-                millisPerBeat = secsPerBeat * 1000;
-                pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);
-                pixPerSec = pixPerBeat / secsPerBeat;
-                play();
-            });*/
             abort.abort();
             event.target.parentElement.hidden = true;
         }
@@ -95,6 +85,63 @@ function menus(){
             document.getElementById("editor").hidden = true;
             document.getElementById("mainMenu").hidden = false;
             menus();
+        }
+        if (name == "inputCal"){
+            guide = document.getElementById("calAudio");
+            if (use == false){
+                use = true;
+                count = 0;
+                avgOff = 0;
+                off = 0;
+                event.target.innerHTML = "Click along to the beat in... 5";
+                guide.play();
+                guide.addEventListener("playing", () => {
+                    setTimeout(() => {
+                        event.target.innerHTML = "Click along to the beat in... 4";
+                    }, 2000);
+                    setTimeout(() => {
+                        event.target.innerHTML = "Click along to the beat in... 3";
+                    }, 2500);
+                    setTimeout(() => {
+                        event.target.innerHTML = "Click along to the beat in... 2";
+                    }, 3000);
+                    setTimeout(() => {
+                        event.target.innerHTML = "Click along to the beat in... 1";
+                    }, 3500);
+                    setTimeout(() => {
+                        event.target.innerHTML = "Click along to the beat in. Go!";
+                    }, 4000);
+                }, {signal: globalAbort.signal});
+                calSig = new AbortController();
+                document.addEventListener("click", calibrate, {signal: calSig.signal});
+                document.addEventListener("keydown", calibrate, {signal: calSig.signal});
+            }
+            function calibrate(board){
+                if (board.key == "Escape"){
+                    event.target.innerHTML = "Calibrate";
+                    use = false;
+                    guide.pause();
+                    calSig.abort();
+                    guide.currentTime = 0;
+                }
+                else if (guide.currentTime < 3.8){
+                
+                }
+                else if (count >= 8){
+                    document.getElementById("inputOffset").value = avgOff;
+                    event.target.innerHTML = "Calibrate";
+                    use = false;
+                    calSig.abort();
+                }
+                else{
+                    off = guide.currentTime - 4 - 0.5 * count;
+                    avgOff = (avgOff * count + off) / (count + 1);
+                    count += 1;
+                }
+            }
+            
+            
+            
         }
         if (name == "close"){
             event.target.parentElement.hidden = true;
@@ -203,7 +250,7 @@ function play(){
             time = 1000 * ((j * (eval(level.time) * 4) * secsPerBeat) + secsPerBeat * vexCodetoRhythmArray(level.rthm[j]).slice(0, i + 1).reduce((prev, current) => prev + current, 0) - (document.getElementById("audio").currentTime - level.offset));
         }
         clearTimeout(failTimeID);
-        failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time, millisPerBeat * Settings.threshold));
+        failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
     }
 
     function fail(){
@@ -234,7 +281,7 @@ function play(){
             time = 1000 * ((j * (eval(level.time) * 4) * secsPerBeat) + secsPerBeat * vexCodetoRhythmArray(level.rthm[j]).slice(0, i + 1).reduce((prev, current) => prev + current, 0) - (document.getElementById("audio").currentTime - level.offset));
         }
         clearTimeout(failTimeID);
-        failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time, millisPerBeat * Settings.threshold));
+        failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
         if(Settings.sheetMusicMode == "line"){render(level.rthm, j);}
     }
     function pauseEvents(){

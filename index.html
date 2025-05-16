@@ -88,9 +88,14 @@
     <div hidden class="menus" id="settingsMenu">
         <p style="font-size: max(35px, 5vw); margin: 0px;">Settings</p>
         <div style="width: 100%"></div>
+        Error Threshold:
+        <div style="width: 100%"></div>
         <input type="number" min="0" max="1" step="0.01" value="0.3" id="threshold">
         <div style="width: 100%"></div>
-        <input type="number" step="any" value="0" id="inputOffset">
+        Input Offset:
+        <div style="width: 100%"></div>
+        <input type="number" step="any" value="0" id="inputOffset"> <button name="inputCal">Calibrate</button>
+        <audio id="calAudio" hidden src="resources/calAudio.mp3"></audio>
         <div style="width: 100%"></div>
         Correction mode
         <div style="width: 100%"></div>
