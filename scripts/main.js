@@ -48,6 +48,7 @@ function menus(){
     inputBool = false;
     document.addEventListener("click", (event) => {inputs(event);}, {signal: abort.signal});
     use = false;
+    ignore = false;
     function inputs(event){
         var name = event.target.name;
 
@@ -116,7 +117,7 @@ function menus(){
                 document.addEventListener("click", calibrate, {signal: calSig.signal});
                 document.addEventListener("keydown", calibrate, {signal: calSig.signal});
             }
-            function calibrate(board){
+            function calibrate(board){//#hitting space counts as both clicking and a button, so it doesn't calibrate correctly. Maybe add a check if the hits are too close together, only do the first?
                 if (board.key == "Escape"){
                     event.target.innerHTML = "Calibrate";
                     use = false;
@@ -139,8 +140,34 @@ function menus(){
                     count += 1;
                 }
             }
-            
-            
+        }
+        if (name == "offsetCal" && !ignore){
+            if (document.getElementById("location").value == ""){
+                event.target.innerHTML = "Select an audio file first!";
+            }
+            else{
+                ignore = true;
+                level.location = window.URL.createObjectURL(document.getElementById("location").files[0]);
+                document.getElementById("audio").src = level.location;
+                event.target.innerHTML = "Click when the level should start";
+                document.getElementById("audio").play();
+                ofcalsig = new AbortController();
+                document.addEventListener("click", offCal, {signal: ofcalsig.signal});
+                document.addEventListener("keydown", offCal, {signal: ofcalsig.signal});
+            }
+            function offCal(letter){
+                if (letter.key == "Escape"){
+
+                }
+                else{
+                    document.getElementById("offset").value = document.getElementById("audio").currentTime - Settings.inputOffset;
+                }
+                event.target.innerHTML = "Calibrate";
+                document.getElementById("audio").pause();
+                ofcalsig.abort();
+                document.getElementById("audio").currentTime = 0;
+                ignore = false;
+            }
             
         }
         if (name == "close"){
@@ -159,6 +186,8 @@ function menus(){
             if(document.getElementById("levelFile").value == ""){
                 level.rthm = ["[].concat("];
             }
+            level.location = window.URL.createObjectURL(document.getElementById("location").files[0]);
+            document.getElementById("audio").src = level.location;
             abort.abort();
             setTimeout(()=>{inputBool = true;}, 0.1);
         }
