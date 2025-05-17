@@ -1,0 +1,24 @@
+{
+    "time": "4/4",
+    "bpm": 127.12,
+    "offset": 1.8879798615,
+    "title": "Cloud Bubble",
+    "artist": "Nick Sewell",
+    "location": "resources/Levels/Cloud Bubble.mp3",
+    "creator": "",
+    "difficulty": "Beginner",
+    "rthm": [
+        "[].concat(score.notes('B4/4'), score.notes('B4/2'), score.notes('B4/4'), )",
+        "[].concat(score.notes('B4/4'), score.notes('B4/2.'), )",
+        "[].concat(score.notes('B4/4'), score.notes('B4/2'), score.notes('B4/4'), )",
+        "[].concat(score.notes('B4/4'), score.notes('B4/2.'), )",
+        "[].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/2.'), )",
+        "[].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4/r'), )",
+        "[].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/4.'), score.notes('B4/8'), score.notes('B4/4'), )",
+        "[].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/2'), score.notes('B4/4/r'), )",
+        "[].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), )",
+        "[].concat(score.notes('B4/4'), score.tuplet([].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), ), {num_notes: 3, notes_occupied: 2})).concat(score.tuplet([].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), ), {num_notes: 3, notes_occupied: 2})).concat(score.notes('B4/4/r'), )",
+        "[].concat(score.notes('B4/4'), score.notes('B4/2'), score.notes('B4/4'), )",
+        "[].concat(score.notes('B4/1/r'),)"
+    ]
+}
