@@ -425,18 +425,13 @@ function play(){
                         multiplier = performance;
                         if (error < 0){
                             playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight + performance * error * pixPerBeat));
+                            console.log(canvas.height - (playerHeight + performance * error * pixPerBeat));
                         }
                         playerHeight = playerHeight + performance * 2 * error * pixPerBeat;
                     }
                     else{
                         multiplier = performance;
                         playerHeight = playerHeight + performance * error * pixPerBeat;
-                    }
-                    if (playerHeight < 0){
-                        playerHeight += canvas.height;
-                    }
-                    if (playerHeight > canvas.height){
-                        playerHeight -= canvas.height;
                     }
                     if (error > 0){
                         playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight - performance * error * pixPerBeat));
