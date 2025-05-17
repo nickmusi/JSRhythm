@@ -425,16 +425,17 @@ function play(){
                         multiplier = performance;
                         if (error < 0){
                             playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight + performance * error * pixPerBeat));
-                            console.log(canvas.height - (playerHeight + performance * error * pixPerBeat));
+                        }
+                        if (error > 0){
+                            playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight - performance * error * pixPerBeat));
                         }
                         playerHeight = playerHeight + performance * 2 * error * pixPerBeat;
+                        
+                        
                     }
                     else{
                         multiplier = performance;
                         playerHeight = playerHeight + performance * error * pixPerBeat;
-                    }
-                    if (error > 0){
-                        playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight - performance * error * pixPerBeat));
                     }
                 }
                 else{
@@ -490,7 +491,7 @@ function play(){
             }
             if (Settings.correctionMode == "snap"){
                 playerTrailPath.lineTo(position + canvas.width / 2, canvas.height - playerHeight);
-                playerHeight = 0;
+                playerHeight = playerHeight - canvas.height;
                 playerTrailPath.moveTo(position + canvas.width / 2, canvas.height - playerHeight);
             }
         }
@@ -520,7 +521,7 @@ function play(){
             }
             if (Settings.correctionMode == "snap"){
                 playerTrailPath.lineTo(position + canvas.width / 2, canvas.height - playerHeight);
-                playerHeight = canvas.height;
+                playerHeight = canvas.height + playerHeight;
                 playerTrailPath.moveTo(position + canvas.width / 2, canvas.height - playerHeight);
             }
         }
