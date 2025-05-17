@@ -427,7 +427,7 @@ function play(){
                             playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight + performance * error * pixPerBeat));
                         }
                         if (error > 0){
-                            playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight - performance * error * pixPerBeat));
+                            playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight + performance * error * pixPerBeat));
                         }
                         playerHeight = playerHeight + performance * 2 * error * pixPerBeat;
                         
