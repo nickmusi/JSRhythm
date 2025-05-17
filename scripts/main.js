@@ -183,11 +183,15 @@ function menus(){
                     level[i] = document.getElementById(String(i)).value;
                 }
             }
+            level.bpm = Number(level.bpm);
+            level.offset = Number(level.offset);
             if(document.getElementById("levelFile").value == ""){
                 level.rthm = ["[].concat("];
             }
-            level.location = window.URL.createObjectURL(document.getElementById("location").files[0]);
-            document.getElementById("audio").src = level.location;
+            if (document.getElementById("location").value != ""){
+                level.location = window.URL.createObjectURL(document.getElementById("location").files[0]);
+                document.getElementById("audio").src = level.location;
+            }
             abort.abort();
             setTimeout(()=>{inputBool = true;}, 0.1);
         }
@@ -197,6 +201,13 @@ function menus(){
             Settings.inputOffset = Number(document.getElementById("inputOffset").value);
         }
         if (name == "save"){
+            for (i in level){
+                if (String(i) != 'rthm'){
+                    level[i] = document.getElementById(String(i)).value;
+                }
+            }
+            level.bpm = Number(level.bpm);
+            level.offset = Number(level.offset);
             downloadBlob(new Blob([JSON.stringify(level, null, 4)]), "level.json")
         }
         if (name == "load"){
@@ -204,6 +215,11 @@ function menus(){
                 event.target.files[0].text()
                 .then((text) =>{
                     level = JSON.parse(text);
+                    for (i in level){
+                        if (String(i) != 'rthm'){
+                            document.getElementById(String(i)).value = level[i];
+                        }
+                    }
                 });
             }, {signal: abort.signal});
         }
@@ -423,15 +439,8 @@ function play(){
                 if (Math.abs(error) <= Settings.threshold){
                     if (multiplier != 0){
                         multiplier = performance;
-                        if (error < 0){
-                            playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight + performance * error * pixPerBeat));
-                        }
-                        if (error > 0){
-                            playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight + performance * error * pixPerBeat));
-                        }
+                        playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight + performance * error * pixPerBeat));
                         playerHeight = playerHeight + performance * 2 * error * pixPerBeat;
-                        
-                        
                     }
                     else{
                         multiplier = performance;
@@ -759,7 +768,7 @@ function editor(){
             menus();
             document.getElementById("editorMenu").hidden = false;
         }
-        if ((!(document.getElementById("tuplet").checked) && id != "delete")){
+        if ((!(document.getElementById("tuplet").checked) && id != "delete")){//#right now a triplet ending the measure messes up the auto next measure
             if (vexCodetoRhythmArray(level.rthm[measure] + endParen).reduce((prev, current) => prev + current, 0) > eval(testCode(level.time)) * 4){
                 var end =level.rthm[measure].lastIndexOf("score.notes")
                level.rthm[measure] =level.rthm[measure].slice(0, end);
