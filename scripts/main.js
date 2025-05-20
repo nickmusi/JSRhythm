@@ -141,7 +141,7 @@ function menus(){
                 }
             }
         }
-        if (name == "offsetCal" && !ignore){
+        if (name == "offsetCal" && !ignore){//#need to add tap tempo feature
             if (document.getElementById("location").value == ""){
                 event.target.innerHTML = "Select an audio file first!";
             }
@@ -557,6 +557,9 @@ function vexCodetoRhythmArray(vexCode = ""){
         var strArray = str.split(",")
         var noteArray = [];
         for (i in strArray){
+            if (strArray[i].includes("r")){
+                //#rest code
+            }
             strArray[i] = strArray[i].slice(strArray[i].indexOf("/") + 1)
             noteArray[i] = (1 / (Number(strArray[i].replaceAll(/\D/g, "")))) * 4;
             for (j = 0, orig = noteArray[i]; j < strArray[i].split(".").length - 1; j++){
@@ -636,14 +639,14 @@ function rhythmArraytoVexflow(array = []){
     return vexString;
 }
 
-function editor(){
-    var measure = 0;
+function editor(){//#need to add beam support
+    var measure = -2;
     var endParen = ")";
 
     document.getElementById("editor").hidden = false;
     document.getElementById("sheetMusic").hidden = false;
     document.addEventListener("click", (event) => {if (inputBool && event.target.id != "measure"){inputs(event)};}, {signal: globalAbort.signal});
-    document.addEventListener("keydown", (event) => {if (inputBool){inputs(event)};}, {signal: globalAbort.signal});
+    document.addEventListener("keydown", (event) => {if (inputBool && event.key == "Escape"){inputs(event)};}, {signal: globalAbort.signal});
     document.getElementById("measure").addEventListener("change", (event) => {editRender(level.rthm, Number(event.target.value));}, {signal: globalAbort.signal});
     
 //#newly loaded score only shows when updating measure location. Appending scores has some bugs
@@ -754,7 +757,7 @@ function editor(){
                 var numNotes = document.getElementById("notes").value;
                 var notesOccupied = document.getElementById("length").value;
                 if (numNotes == ""){
-                    numNotes = [...rthm[measure].slice(level.rthm[measure].lastIndexOf("tuplet(")).matchAll("notes")].length;
+                    numNotes = level.rthm[measure].slice(level.rthm[measure].lastIndexOf("tuplet(")).matchAll("notes").toArray().length;
                 }
                level.rthm[measure] =level.rthm[measure].concat("), {num_notes: " + String(numNotes) +", notes_occupied: " + String(notesOccupied) + "})).concat(");
                 endParen = endParen.replace("))", "");

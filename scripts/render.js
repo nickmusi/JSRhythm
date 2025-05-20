@@ -18,9 +18,9 @@ function newMeasure(vexCode = "", width = 200, options = {time: "-1", key: "-1",
     vexCode = vexCode.slice(0, vexCode.indexOf("(newMeasure") - 7);
   }
   var remain = eval(testCode(level.time)) * 4 - vexCodetoRhythmArray(vexCode).reduce((prev, current) => prev + current, 0);//this isn't doing anything#
-  if (remain == 0){
+  /*if (remain == 0){
     vexCode = "(" + vexCode
-  }
+  }*/
   if (Math.floor(remain / 4) > 0){
       vexCode += "score.notes('B4/1/r'),";
       remain += -4;
@@ -41,7 +41,7 @@ function newMeasure(vexCode = "", width = 200, options = {time: "-1", key: "-1",
       vexCode += "score.notes('B4/16/r'),";
       remain += -0.25;
   }
-  vexCode += ")";//I know this isn't doing anything
+  //vexCode += ")";//I know this isn't doing anything
   vexCode = eval(testCode(vexCode));
   var voice = score.voice(vexCode);
   if (options.time != undefined && options.time != "-1"){
