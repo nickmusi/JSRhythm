@@ -17,7 +17,7 @@ function newMeasure(vexCode = "", width = 200, options = {time: "-1", key: "-1",
   if (vexCode.indexOf("(newMeasure") != -1){
     vexCode = vexCode.slice(0, vexCode.indexOf("(newMeasure") - 7);
   }
-  var remain = eval(testCode(level.time)) * 4 - vexCodetoRhythmArray(vexCode).reduce((prev, current) => prev + current, 0);//this isn't doing anything#
+  var remain = eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([vexCode]).reduce((prev, current) => prev + current.duration, 0);//this isn't doing anything#
   /*if (remain == 0){
     vexCode = "(" + vexCode
   }*/

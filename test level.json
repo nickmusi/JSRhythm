@@ -9,22 +9,22 @@
     "difficulty": null,
     "rthm":
     [
-        "score.notes('B4/1')",
-        "score.notes('B4/1')",
-        "score.notes('B4/1')",
-        "score.notes('B4/1')",
+        "[].concat(score.notes('B4/1'))",
+        "[].concat(score.notes('B4/1'))",
+        "[].concat(score.notes('B4/1'))",
+        "[].concat(score.notes('B4/1'))",
         
         "[].concat(score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), )",
         "[].concat(score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), )",
         "[].concat(score.notes('B4/8.'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/16'), score.notes('B4/8.'), )",
         "[].concat(score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), )",
-        "score.notes('B4/1')",
-        "score.notes('B4/1')",
-        "score.notes('B4/8., B4/16, B4/8, B4/16').concat(tie(score.notes('B4/16, B4/16'))).concat(score.notes('B4/16, B4/8, B4/8, B4/8'))",
+        "[].concat(score.notes('B4/1'))",
+        "[].concat(score.notes('B4/1'))",
+        "[].concat(score.notes('B4/8., B4/16, B4/8, B4/16').concat(tie(score.notes('B4/16, B4/16'))).concat(score.notes('B4/16, B4/8, B4/8, B4/8')))",
         "[].concat(score.notes('B4/8.'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/16'), score.notes('B4/8.'), )",
         "[].concat(score.notes('B4/8.'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), )",
-        "score.notes('B4/8., B4/16, B4/8, B4/16').concat(tie(score.notes('B4/16, B4/16'))).concat(score.notes('B4/16, B4/8, B4/8, B4/8'))",
-        "score.notes('B4/8, B4/8, B4/4, B4/2')"
+        "[].concat(score.notes('B4/8., B4/16, B4/8, B4/16').concat(tie(score.notes('B4/16, B4/16'))).concat(score.notes('B4/16, B4/8, B4/8, B4/8')))",
+        "[].concat(score.notes('B4/8, B4/8, B4/4, B4/2'))"
         
     ]
 }
