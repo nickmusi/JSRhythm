@@ -292,9 +292,15 @@ function play(){
         else{
             i++;
         }
-        time = 1000 * (secsPerBeat * rhythmArray.slice(0, i + 1).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset));
 
         clearTimeout(failTimeID);
+        if (rhythmArray[i].rest){
+            setTimeout(() => {i++; console.log("there");}, 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) - Settings.threshold * millisPerBeat);
+            time = 1000 * (secsPerBeat * rhythmArray.slice(0, i + 1).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
+        }
+        else{
+            time = 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
+        }
         failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
     }
 
@@ -317,8 +323,17 @@ function play(){
     }
     
     function playEvents(){
-        //#maybe put the calculatePostion() function here if things break        
-        time = 1000 * (secsPerBeat * rhythmArray.slice(0, i + 1).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset));
+        //#maybe put the calculatePostion() function here if things break
+        if (rhythmArray[i].rest){//#double check that starting with a rest works (the whole level)
+            i++
+            time = 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
+        }
+        else{
+            time = 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
+        }
+        failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));      
+
+        time = 1000 * (secsPerBeat * rhythmArray.slice(0, i + 1).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + Settings.threshold * millisPerBeat;
         clearTimeout(failTimeID);
         failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
         if(Settings.sheetMusicMode == "line"){render(level.rthm, rhythmArray[i].measure);}
@@ -369,7 +384,7 @@ function play(){
             //playerPathArray[l] = -Math.sign(y) * (document.getElementById("game").height - Math.abs(y) + 0.000000001);
             //rhythmArray[l].y = -Math.sign(y) * (document.getElementById("game").height - Math.abs(y) + 0.000000001);
 
-            if (l >= rhythmArray.length - 1){//don't know what this is doing
+            if (l >= rhythmArray.length - 1){//this makes line go all the way to ending space
                 if (Math.sign(y) > 0){
                     path.lineTo(x + 30, y + 30);
                 }
@@ -383,7 +398,12 @@ function play(){
                 rhythmArray[l].x = x;
             }
             l++;
-            y *= -1;
+            if (rhythmArray[l] != undefined){
+                if (!rhythmArray[l].rest){
+                    y *= -1;
+                }
+            }
+            
         }
         if (Settings.sheetMusicMode == "scroll"){
             renderAll(level.rthm);
@@ -439,7 +459,7 @@ function play(){
                         
                         //error * pixPerbeat = ((position + canvas.width / 2) - rhythmArray[i - 2].x)
                         //console.log(error * pixPerBeat, performance * (canvas.height - playerHeight - rhythmArray[i - 2].y));
-                        console.log(((((position + canvas.width / 2) - rhythmArray[i - 2].x) > 0) && (Math.abs(rhythmArray[i - 2].y)) < 0.001));
+                        console.log((playerHeight > canvas.height || playerHeight < 0) && (position + canvas.width / 2 - rhythmArray[i - 2].x > 0));
 //                        playerHeight = playerHeight + performance * 2 * error * pixPerBeat;//#not done with fix
                         playerHeight = playerHeight + performance * 2 * ((position + canvas.width / 2) - rhythmArray[i - 2].x);//#not done with fix
 
