@@ -301,6 +301,7 @@ function play(){
         if (rhythmArray[i] != undefined){
             if (rhythmArray[i].rest){
                 setTimeout(() => {i++;}, 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) - Settings.threshold * millisPerBeat);
+                setTimeout(() => {performance *= -1;}, 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)));   
                 time = 1000 * (secsPerBeat * rhythmArray.slice(0, i + 1).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
             }
             else{
@@ -353,6 +354,7 @@ function play(){
     }
 
     var path = new Path2D;
+    var restA = new Path2D;
     const canvas = document.getElementById("game");
     var svg;
     var multiplier = 0;
@@ -409,8 +411,10 @@ function play(){
             }
             l++;
             if (rhythmArray[l] != undefined){
-                if (!rhythmArray[l].rest){
-                    y *= -1;
+                y *= -1;
+                if (rhythmArray[l].rest){
+                    restA.moveTo(x - 6, Math.abs(y));
+                    restA.lineTo(x + 6, Math.abs(y));
                 }
             }
             
@@ -499,7 +503,10 @@ function play(){
         ctx.setTransform(1, 0, 0, 1, -position, 0);
         ctx.lineWidth = pixPerBeat * Settings.threshold + Dev.playerWidth;
         ctx.strokeStyle = "rgb(255, 255, 255)";
-        ctx.stroke(path);
+        ctx.stroke(path);//#need to add rest animation, probably need to add a separate path
+        ctx.strokeStyle = "rgb(77, 167, 82)";
+        ctx.lineWidth = Math.sqrt((Math.pow(pixPerBeat * Settings.threshold + Dev.playerWidth, 2)) + (Math.pow(pixPerBeat * Settings.threshold + Dev.playerWidth, 2)));
+        ctx.stroke(restA);
         ctx.strokeStyle = "rgb(255, 0, 0)";
         ctx.lineWidth = Dev.playerWidth / 2;
         ctx.stroke(rendered);
@@ -561,6 +568,7 @@ function vexCodetoRhythmArray(vexCodeArray = []){//#make beaming automatic on tu
         vexCode = testCode(vexCodeArray[i]).replaceAll("score.notes", "vNotes");
         vexCode = vexCode.replaceAll("tie", "vTie");
         vexCode = vexCode.replaceAll("score.tuplet", "vTuplet");
+        vexCode = vexCode.replaceAll("score.beam", "");
         vexCode = vexCode.replaceAll(" ", "");
         all = all + ".concat(measure([]" +vexCode.slice(2) + ", " + String(i) + "))";//vexcode must start with [](it slices this)
     }
@@ -770,8 +778,8 @@ function editor(){//#need to add beam support
         }
         if (id == "tuplet"){
             if (document.getElementById("tuplet").checked){
-               level.rthm[measure] =level.rthm[measure].concat("score.tuplet([].concat(");
-                endParen = endParen + "))";
+               level.rthm[measure] =level.rthm[measure].concat("score.beam(score.tuplet([].concat(");
+                endParen = endParen + ")))";
             }
             else {
                 var numNotes = document.getElementById("notes").value;
@@ -866,7 +874,7 @@ function selector(){
 }
 
 function testCode(code){
-    if (code == code.matchAll(/score|notes|tuplet|{num_|:|_occupied|}|\[]\.concat|concat|tie|r|\.|\(|\)|"|'|[A-G]|\/|\d| |,/g).reduce((prev, current) => prev + current.toString(), 0).slice(1)){
+    if (code == code.matchAll(/score|notes|beam|tuplet|{num_|:|_occupied|}|\[]\.concat|concat|tie|r|\.|\(|\)|"|'|[A-G]|\/|\d| |,/g).reduce((prev, current) => prev + current.toString(), 0).slice(1)){
         return code;
     }
     else{
