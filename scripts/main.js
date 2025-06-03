@@ -37,6 +37,13 @@ var Settings = {
 var Dev = {
     playerWidth: 20
 }
+var colorSet = {
+    walls: '#000000',
+    path: '#ffffff',
+    trail: '#45fc48',
+    player:'#000000',
+    rest: '#60ddf3'
+}
 var secsPerBeat;
 var millisPerBeat;
 var globalAbort = new AbortController();
@@ -46,7 +53,13 @@ var raNote = {
     duration: 0,
     measure: 0,
     rest: false,
-    special: "",
+    colors: {
+            walls: 'rgb(90, 59, 245)',
+            path: 'rgb(175, 175, 175)',
+            trail: 'rgb(78, 201, 90)',
+            player:'rgb(178, 243, 15)',
+            rest: 'rgb(255, 255, 255)'
+        },
     x: 0,
     y: 0
 }
@@ -254,6 +267,8 @@ function play(){
 
     var rhythmArray = vexCodetoRhythmArray(level.rthm);
 
+    colorSet = rhythmArray[0].colors;
+
     document.getElementById("audio").addEventListener("playing", () => {playEvents();}, {signal: globalAbort.signal});
     document.getElementById("audio").addEventListener("seeking", () => {pauseEvents();}, {signal: globalAbort.signal});
     document.getElementById("audio").addEventListener("seeked", () => {if(!audio.paused){playEvents();}}, {signal: globalAbort.signal});
@@ -284,6 +299,11 @@ function play(){
         else {
             performance *= -1;
         }
+
+        if (rhythmArray[i].colors != undefined){
+            colorSet = rhythmArray[i].colors;
+        }
+
         if(Settings.sheetMusicMode == "line"){render(level.rthm, j);};
         error = (audio.currentTime - Settings.inputOffset - level.offset) / secsPerBeat - (rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0));
         if (Math.abs(error) > Settings.threshold){
@@ -329,6 +349,11 @@ function play(){
         while (rhythmArray.slice(0, it).reduce((prev, current,) => prev + current.duration, 0) < ((document.getElementById("audio").currentTime - level.offset) / secsPerBeat)){
             it++;
         }
+        q = it;
+        while (rhythmArray[q].colors == undefined){
+            q -= 1;
+        }
+        colorSet = rhythmArray[q].colors;
         return it;
 
     }
@@ -434,7 +459,7 @@ function play(){
 
     function animate(){
         const ctx = canvas.getContext("2d");
-        ctx.fillStyle = "rgb(0, 0, 0)";
+        ctx.fillStyle = colorSet.walls;
         var position = pixPerSec * (audio.currentTime - level.offset - Settings.inputOffset) - canvas.width / 2;
 
         if (Math.sign(performance) != Math.sign(multiplier)){
@@ -502,12 +527,12 @@ function play(){
         if (position + canvas.width / 2 >= 0){rendered.lineTo(position + canvas.width / 2, canvas.height - playerHeight);}
         ctx.setTransform(1, 0, 0, 1, -position, 0);
         ctx.lineWidth = pixPerBeat * Settings.threshold + Dev.playerWidth;
-        ctx.strokeStyle = "rgb(255, 255, 255)";
+        ctx.strokeStyle = colorSet.path;
         ctx.stroke(path);//#need to add rest animation, probably need to add a separate path
-        ctx.strokeStyle = "rgb(77, 167, 82)";
+        ctx.strokeStyle = colorSet.rest;
         ctx.lineWidth = Math.sqrt((Math.pow(pixPerBeat * Settings.threshold + Dev.playerWidth, 2)) + (Math.pow(pixPerBeat * Settings.threshold + Dev.playerWidth, 2)));
         ctx.stroke(restA);
-        ctx.strokeStyle = "rgb(255, 0, 0)";
+        ctx.strokeStyle = colorSet.trail;
         ctx.lineWidth = Dev.playerWidth / 2;
         ctx.stroke(rendered);
 
@@ -552,7 +577,7 @@ function play(){
             }
         }
         prevTime = audio.currentTime;
-
+        ctx.fillStyle = colorSet.player;
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillRect(canvas.width / 2 - Dev.playerWidth / 2, canvas.height - playerHeight - Dev.playerWidth / 2, Dev.playerWidth, Dev.playerWidth);
 
@@ -574,7 +599,7 @@ function vexCodetoRhythmArray(vexCodeArray = []){//#make beaming automatic on tu
     }
     return eval(all);
 
-    function vNotes(str = ""){
+    function vNotes(str = "", style){
         var strArray = str.split(",")
         var noteArray = [];
         for (i in strArray){
@@ -587,6 +612,7 @@ function vexCodetoRhythmArray(vexCodeArray = []){//#make beaming automatic on tu
             for (j = 0, orig = noteArray[i].duration; j < strArray[i].split(".").length - 1; j++){
                 noteArray[i].duration = noteArray[i].duration + orig * (2 ** (-1 *(j + 1)));
             }
+            noteArray[i].colors = style;
         }
         return noteArray;
     }
@@ -670,12 +696,52 @@ function rhythmArraytoVexflow(array = []){
 function editor(){//#need to add beam support
     var measure = -2;
     var endParen = ")";
+    var next = true;
 
     document.getElementById("editor").hidden = false;
     document.getElementById("sheetMusic").hidden = false;
     document.addEventListener("click", (event) => {if (inputBool && event.target.id != "measure"){inputs(event)};}, {signal: globalAbort.signal});
     document.addEventListener("keydown", (event) => {if (inputBool && event.key == "Escape"){inputs(event)};}, {signal: globalAbort.signal});
     document.getElementById("measure").addEventListener("change", (event) => {editRender(level.rthm, Number(event.target.value));}, {signal: globalAbort.signal});
+    document.getElementsByName("colors").forEach((element) => {
+        element.value = colorSet[element.id];
+        element.addEventListener("change", (event) => {
+            colorSet[event.target.id] = event.target.value;
+            next = true;
+            drawEdCanv();
+        }, {signal: globalAbort.signal});
+    });
+    
+    drawEdCanv();
+    
+    function drawEdCanv() {
+        edCanv = document.getElementById("placeColor");
+        edCtx = edCanv.getContext("2d");
+        edCtx.fillStyle = colorSet.walls;
+        edCtx.fillRect(0, 0, edCanv.width, edCanv.height);
+        edCtx.strokeStyle = colorSet.path;
+        edPath = new Path2D();
+        edPath.moveTo(0, edCanv.height / 2);
+        edPath.lineTo(edCanv.width, edCanv.height / 2);
+        edCtx.lineWidth = edCanv.height / 3;
+        edCtx.stroke(edPath);
+        edPath = new Path2D();
+        edPath.moveTo(0, edCanv.height / 2);
+        edPath.lineTo(edCanv.width / 2, edCanv.height / 2);
+        edCtx.strokeStyle = colorSet.trail;
+        edCtx.lineWidth = Dev.playerWidth / 2;
+        edCtx.stroke(edPath);
+        edPath = new Path2D();
+        edPath.moveTo(edCanv.width * 2 / 3 - 6, edCanv.height / 2);
+        edPath.lineTo(edCanv.width * 2 / 3 + 6, edCanv.height / 2);
+        edCtx.strokeStyle = colorSet.rest;
+        edCtx.lineWidth = edCanv.height / 3;
+        edCtx.stroke(edPath);
+        edCtx.fillStyle = colorSet.player;
+        edCtx.setTransform(1, 0, 0, 1, 0, 0);
+        edCtx.fillRect(edCanv.width / 2 - Dev.playerWidth / 2, edCanv.height / 2 - Dev.playerWidth / 2, Dev.playerWidth, Dev.playerWidth);
+    };
+
     
 //#newly loaded score only shows when updating measure location. Appending scores has some bugs
 
@@ -718,7 +784,7 @@ function editor(){//#need to add beam support
         }
 
         if (id == "1"){
-            if (document.getElementById("rest").checked){
+            if (document.getElementById("rest0").checked){
                 level.rthm[measure] =level.rthm[measure].concat("score.notes('D5/1/r'), ")
             }
             else{
@@ -726,7 +792,7 @@ function editor(){//#need to add beam support
             }
         }
         if (id == "2"){
-            if (document.getElementById("rest").checked){
+            if (document.getElementById("rest0").checked){
                level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/2/r'), ");
             }
             else{
@@ -734,7 +800,7 @@ function editor(){//#need to add beam support
             }
         }
         if (id == "4"){
-            if (document.getElementById("rest").checked){
+            if (document.getElementById("rest0").checked){
                level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/4/r'), ");
             }
             else{
@@ -742,7 +808,7 @@ function editor(){//#need to add beam support
             }
         }
         if (id == "8"){
-            if (document.getElementById("rest").checked){
+            if (document.getElementById("rest0").checked){
                level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/8/r'), ");
             }
             else{
@@ -750,12 +816,16 @@ function editor(){//#need to add beam support
             }
         }
         if (id == "16"){
-            if (document.getElementById("rest").checked){
+            if (document.getElementById("rest0").checked){
                level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/16/r'), ");
             }
             else{
                level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/16'), ");
             }
+        }
+        if (next && (String(id.match(/\d+/g)) == id)){
+            level.rthm[measure] = level.rthm[measure].slice(0, level.rthm[measure].lastIndexOf("'") + 1) +", " + JSON.stringify(colorSet).replaceAll("\"", "'").replaceAll(RegExp(/'(?!#|,|})/g), "") + level.rthm[measure].slice(level.rthm[measure].lastIndexOf("'") + 1)
+            next = false;
         }
         if (id == "tie"){
             var tieHere =level.rthm[measure].lastIndexOf("score.notes");
@@ -874,13 +944,12 @@ function selector(){
 }
 
 function testCode(code){
-    if (code == code.matchAll(/score|notes|beam|tuplet|{num_|:|_occupied|}|\[]\.concat|concat|tie|r|\.|\(|\)|"|'|[A-G]|\/|\d| |,/g).reduce((prev, current) => prev + current.toString(), 0).slice(1)){
+    if (code == code.matchAll(/score|notes|beam|{walls|path|#|trail|player|rest|tuplet|{num_|:|_occupied|}|\[]\.concat|concat|tie|r|\.|\(|\)|"|'|[A-G]|[a-g]|\/|\d| |,/g).reduce((prev, current) => prev + current.toString(), 0).slice(1)){
         return code;
     }
     else{
-        alert("Level file invalid! Remove \"" + code.replaceAll(/score|notes|tuplet|{num_|:|_occupied|}|\[]\.concat|concat|tie|r|\.|\(|\)|"|'|[A-G]|\/|\d| |,/g, "") + "\" from level file!");
+        alert("Level file invalid! Remove \"" + code.replaceAll(/score|notes|beam|{walls|path|#|trail|player|rest|tuplet|{num_|:|_occupied|}|\[]\.concat|concat|tie|r|\.|\(|\)|"|'|[A-G]|[a-g]|\/|\d| |,/g, "") + "\" from level file!");
         console.log(code);
-        console.log(code.matchAll(/score|notes|tuplet|{num_|:|_occupied|}|\[]\.concat|concat|tie|r|\.|\(|\)|"|'|[A-G]|\/|\d| |,/g).reduce((prev, current) => prev + current, 0).slice(1));
     }
     
 }

@@ -8,7 +8,7 @@
     "creator": "",
     "difficulty": "Beginner",
     "rthm": [
-        "[].concat(score.notes('B4/4'), score.notes('B4/2'), score.notes('B4/4'), )",
+        "[].concat(score.notes('B4/4', {walls:'#000000',path:'#ffffff',trail:'#8bf98d',player:'#000000',rest:'#60ddf3'}), score.notes('B4/2'), score.notes('B4/4'), )",
         "[].concat(score.notes('B4/4'), score.notes('B4/2.'), )",
         "[].concat(score.notes('B4/4'), score.notes('B4/2'), score.notes('B4/4'), )",
         "[].concat(score.notes('B4/4'), score.notes('B4/2.'), )",

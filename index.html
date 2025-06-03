@@ -28,9 +28,16 @@
         <input type="checkbox" id="tuplet">3[</input>
         <input id="notes"type="number">
         <input id="length" type="number" value="2">
-        <input type="checkbox" id="rest">r</input>
+        <input type="checkbox" id="rest0">r</input>
         <input type="number" value="0" placeholder="Measure" id="measure">
         <button id="delete">X</button>
+        <div width="100%" height="0px"></div>
+        <input type="color" name="colors" id="walls">Walls</input>
+        <input type="color" name="colors" id="path">Path</input>
+        <input type="color" name="colors" id="rest">Rests</input>
+        <input type="color" name="colors" id="player">Player</input>
+        <input type="color" name="colors" id="trail">Trail</input>
+        <canvas id="placeColor" width="150" height="200"></canvas>
     </div>
     <div hidden id="selector" style="display: grid; align-content: space-evenly; justify-content: space-evenly; align-items: center; grid-template-columns: repeat(5, auto);">
 

@@ -17,10 +17,10 @@ function newMeasure(vexCode = "", width = 200, options = {time: "-1", key: "-1",
   if (vexCode.indexOf("(newMeasure") != -1){
     vexCode = vexCode.slice(0, vexCode.indexOf("(newMeasure") - 7);
   }
-  var remain = eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([vexCode]).reduce((prev, current) => prev + current.duration, 0);//this isn't doing anything#
+  /*var remain = eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([vexCode]).reduce((prev, current) => prev + current.duration, 0);//this isn't doing anything#
   /*if (remain == 0){
     vexCode = "(" + vexCode
-  }*/
+  }
   if (Math.floor(remain / 4) > 0){
       vexCode += "score.notes('B4/1/r'),";
       remain += -4;
@@ -40,7 +40,7 @@ function newMeasure(vexCode = "", width = 200, options = {time: "-1", key: "-1",
   if (Math.floor(remain / 0.25) > 0){
       vexCode += "score.notes('B4/16/r'),";
       remain += -0.25;
-  }
+  }*/
   //vexCode += ")";//I know this isn't doing anything
   vexCode = eval(testCode(vexCode));
   var voice = score.voice(vexCode);
@@ -123,13 +123,13 @@ function editRender(measures = [], position = 0){
   x = 0;
   
   newMeasure(measures[Math.max(position - 3, 0)], 250, {time: level.time, clef: "percussion"});
-  if (measures[Math.max(position - 2, 1)] != undefined){
+  if ((measures[Math.max(position - 2, 1)] != undefined) && (measures[Math.max(position - 2, 1)] != "[].concat(")){
     newMeasure(measures[Math.max(position - 2, 1)], 250);
   }
-  if (measures[Math.max(position - 1, 2)] != undefined){
+  if ((measures[Math.max(position - 1, 2)] != undefined) && (measures[Math.max(position - 1, 2)] != "[].concat(")){
     newMeasure(measures[Math.max(position - 1, 2)], 250);
   }
-  if (measures[Math.max(position, 3)] != undefined){
+  if ((measures[Math.max(position, 3)] != undefined) && (measures[Math.max(position - 3)] != "[].concat(")){
     newMeasure(measures[Math.max(position, 3)], 250);
   }
 }
