@@ -491,13 +491,12 @@ function play(){
                         multiplier = performance;
                         //playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight + performance * error * pixPerBeat));
                         //if ((position + canvas.width / 2 - rhythmArray[i - 2].x > 0) && ((rhythmArray[i - 2].y < 0.001) || (rhythmArray[i - 2].y > canvas.height - 0.001))){//this disables drawing lines if the player has jumped
-                        if (canvas.height - playerHeight - rhythmArray[i - 2].y > pixPerBeat * Settings.threshold){
+                        if (Math.abs(canvas.height - playerHeight - rhythmArray[i - 2].y) > pixPerBeat * Settings.threshold){
                             
                         }
                         else{
                             playerTrailPath.lineTo(rhythmArray[i-2].x, rhythmArray[i - 2].y);
                         }
-                        console.log(canvas.height - playerHeight - rhythmArray[i - 2].y)
                         
                         //error * pixPerbeat = ((position + canvas.width / 2) - rhythmArray[i - 2].x)
                         //console.log(error * pixPerBeat, performance * (canvas.height - playerHeight - rhythmArray[i - 2].y));//                        playerHeight = playerHeight + performance * 2 * error * pixPerBeat;//#not done with fix
