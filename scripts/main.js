@@ -301,7 +301,7 @@ function play(){
         }
 
         if (rhythmArray[i].colors != undefined){
-            colorSet = rhythmArray[i].colors;
+            colorSet = rhythmArray[i].colors;//#add time signature change, tempo change code here; add option to not have flashes and option to set personal colors (for vision/making only the sheet music visible)
         }
 
         if(Settings.sheetMusicMode == "line"){render(level.rthm, j);};
@@ -461,6 +461,7 @@ function play(){
         const ctx = canvas.getContext("2d");
         ctx.fillStyle = colorSet.walls;
         var position = pixPerSec * (audio.currentTime - level.offset - Settings.inputOffset) - canvas.width / 2;
+        playerHeight += multiplier * pixPerSec * (audio.currentTime - prevTime);
 
         if (Math.sign(performance) != Math.sign(multiplier)){
 
@@ -536,7 +537,7 @@ function play(){
         ctx.lineWidth = Dev.playerWidth / 2;
         ctx.stroke(rendered);
 
-        playerHeight += multiplier * pixPerSec * (audio.currentTime - prevTime);
+        
         if (playerHeight > canvas.height){
             if (Settings.correctionMode == "slope"){//#slope mode not working, player patharray needs replaced
                 var b = 0;
@@ -904,7 +905,7 @@ function selector(){
 
     fetch("resources/list.json")//#
             .then((response) => response.json())
-            .then((items) => {
+            .then((items) => {//#need to add custom level option (to select and play custom level) Maybe eventually have a test level button in editor too
                 for (i in items){
                     l = main.appendChild(document.createElement("button"));
                     l.innerHTML = String(i)
