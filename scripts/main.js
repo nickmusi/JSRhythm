@@ -695,8 +695,8 @@ function rhythmArraytoVexflow(array = []){
 
 function editor(){//#need to add beam support
     var measure = -2;
-    var endParen = ")";
-    var next = true;
+    var endParen = ")";//#editor needs to load colors from level file on editor load and changing measures
+    var next = true;//#going back and adding something in the middle of level file then adds concat( to the next measure, which breaks things (it is an empty measure with just concat(  )
 
     document.getElementById("editor").hidden = false;
     document.getElementById("sheetMusic").hidden = false;
