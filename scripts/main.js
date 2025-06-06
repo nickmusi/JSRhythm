@@ -330,7 +330,7 @@ function play(){
                 setTimeout(() => {userPerformance();}, 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)));   
 
                 r = i;
-                while (rhythmArray[r].rest){
+                while (rhythmArray[r] != undefined && rhythmArray[r].rest){
                     r++;
                 }
                 time = 1000 * (secsPerBeat * rhythmArray.slice(0, r).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
@@ -501,17 +501,14 @@ function play(){
                 if (Math.abs(error) <= Settings.threshold){
                     if (multiplier != 0){
                         multiplier = performance;
-                        //playerTrailPath.lineTo(position - error * pixPerBeat + canvas.width / 2, canvas.height - (playerHeight + performance * error * pixPerBeat));
-                        //if ((position + canvas.width / 2 - rhythmArray[i - 2].x > 0) && ((rhythmArray[i - 2].y < 0.001) || (rhythmArray[i - 2].y > canvas.height - 0.001))){//this disables drawing lines if the player has jumped
-                        if (Math.abs(canvas.height - playerHeight - rhythmArray[i - 2].y) > pixPerBeat * Settings.threshold){
+                
+                        //if (Math.abs(canvas.height - playerHeight - rhythmArray[i - 2].y) > pixPerBeat * Settings.threshold){
                             
-                        }
-                        else{
+                        //}
+                        //else{
                             playerTrailPath.lineTo(rhythmArray[i-2].x, rhythmArray[i - 2].y);
-                        }
+                        //}
                         
-                        //error * pixPerbeat = ((position + canvas.width / 2) - rhythmArray[i - 2].x)
-                        //console.log(error * pixPerBeat, performance * (canvas.height - playerHeight - rhythmArray[i - 2].y));//                        playerHeight = playerHeight + performance * 2 * error * pixPerBeat;//#not done with fix
                         playerHeight = playerHeight + performance * 2 * ((position + canvas.width / 2) - rhythmArray[i - 2].x);//#not done with fix                        
                     }
                     else{
@@ -564,10 +561,10 @@ function play(){
                     multiplier = Math.sign(performance) * Math.abs(Math.abs(playerPathArray[a - 1][playerPathArray[a - 1].length - 1]) - playerHeight) / Math.abs(((a) * (eval(level.time) * 4) * pixPerBeat) + pixPerBeat * rhythmArray.slice(0, b).reduce((prev, current) => prev + current.duration, 0) - (position + pixPerSec * (level.offset + Settings.inputOffset)));
                 }
             }
-            if (Settings.correctionMode == "snap"){
+            if ((Settings.correctionMode == "snap") && ((Math.abs(canvas.height - playerHeight - rhythmArray[i - 1].y) > 2 * Settings.threshold * pixPerBeat) || rhythmArray[i - 2].x - (position + canvas.width / 2) > 2 * pixPerBeat * (Settings.threshold))){
                 playerTrailPath.lineTo(position + canvas.width / 2, canvas.height - playerHeight);
                 playerHeight = playerHeight - canvas.height;
-                playerTrailPath.moveTo(position + canvas.width / 2, canvas.height - playerHeight);
+                playerTrailPath.moveTo(position + canvas.width / 2 - 30, canvas.height - playerHeight + 30);
             }
         }
         if (playerHeight < 0){
@@ -582,10 +579,10 @@ function play(){
                 multiplier = Math.sign(performance) * Math.abs(Math.abs(rhythmArray[b - 1]).height - playerHeight) / Math.abs((rhythmArray[b-1].measure * (eval(level.time) * 4) * pixPerBeat) + pixPerBeat * rhythmArray.slice(0, b).reduce((prev, current) => prev + current.duration, 0) - (position + pixPerSec * (level.offset + Settings.inputOffset)));
                 
             }
-            if (Settings.correctionMode == "snap"){
+            if ((Settings.correctionMode == "snap") && ((Math.abs(canvas.height - playerHeight - rhythmArray[i - 1].y) > 2 * Settings.threshold * pixPerBeat) || rhythmArray[i - 2].x - (position + canvas.width / 2) > 2 * pixPerBeat * (Settings.threshold))){
                 playerTrailPath.lineTo(position + canvas.width / 2, canvas.height - playerHeight);
                 playerHeight = canvas.height + playerHeight;
-                playerTrailPath.moveTo(position + canvas.width / 2, canvas.height - playerHeight);
+                playerTrailPath.moveTo(position + canvas.width / 2 - 30, canvas.height - playerHeight - 30);
             }
         }
         prevTime = audio.currentTime;
