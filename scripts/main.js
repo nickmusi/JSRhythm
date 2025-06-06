@@ -1,5 +1,5 @@
-var level = {
-        "time": "4/4",
+var level = {//wurtz 162.16 immediate
+        "time": "4/4",//134.83 3 measures before
         "bpm": 120,
         "offset": 2.5,
         "title": null,
@@ -64,6 +64,8 @@ var raNote = {
     y: 0
 }
 
+var colorNext = true;
+
 function menus(){
     const abort = new AbortController();
     inputBool = false;
@@ -106,6 +108,8 @@ function menus(){
             document.getElementById("sheetMusic").hidden = true;
             document.getElementById("editor").hidden = true;
             document.getElementById("mainMenu").hidden = false;
+            document.getElementById("failMenu").hidden = true;
+            //#do same for win menu
             menus();
         }
         if (name == "inputCal"){
@@ -232,6 +236,7 @@ function menus(){
             downloadBlob(new Blob([JSON.stringify(level, null, 4)]), "level.json")
         }
         if (name == "load"){
+            colorNext = false;
             event.target.addEventListener("change", ()=>{
                 event.target.files[0].text()
                 .then((text) =>{
@@ -305,7 +310,9 @@ function play(){
         }
 
         if(Settings.sheetMusicMode == "line"){render(level.rthm, j);};
+
         error = (audio.currentTime - Settings.inputOffset - level.offset) / secsPerBeat - (rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0));
+        
         if (Math.abs(error) > Settings.threshold){
             fail();
         }
@@ -320,9 +327,13 @@ function play(){
         clearTimeout(failTimeID);
         if (rhythmArray[i] != undefined){
             if (rhythmArray[i].rest){
-                setTimeout(() => {i++;}, 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) - Settings.threshold * millisPerBeat);
-                setTimeout(() => {performance *= -1;}, 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)));   
-                time = 1000 * (secsPerBeat * rhythmArray.slice(0, i + 1).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
+                setTimeout(() => {userPerformance();}, 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)));   
+
+                r = i;
+                while (rhythmArray[r].rest){
+                    r++;
+                }
+                time = 1000 * (secsPerBeat * rhythmArray.slice(0, r).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
             }
             else{
                 time = 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
@@ -333,11 +344,13 @@ function play(){
 
     function win(){
         //#win state
+        clearTimeout(failTimeID);
     }
 
     function fail(){
         clearTimeout(failTimeID);
         audio.pause();
+        document.getElementById("error").innerHTML = error;
         //console.log("Incorrect! Error " + String(Math.round(100 * error)) + "%");
         document.getElementById("failMenu").hidden = false;
         menus();
@@ -359,14 +372,13 @@ function play(){
     }
     
     function playEvents(){
-        //#maybe put the calculatePostion() function here if things break
-        if (rhythmArray[i].rest){//#double check that starting with a rest works (the whole level)
-            i++
-            time = 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
+        
+        if (rhythmArray[0].rest && i == 0){
+        setTimeout(() => {userPerformance();}, 1000 * (level.offset + Settings.inputOffset));
         }
-        else{
-            time = 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
-        }
+
+        time = 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
+
         failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));      
 
         time = 1000 * (secsPerBeat * rhythmArray.slice(0, i + 1).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + Settings.threshold * millisPerBeat;
@@ -696,7 +708,7 @@ function rhythmArraytoVexflow(array = []){
 function editor(){//#need to add beam support
     var measure = -2;
     var endParen = ")";//#editor needs to load colors from level file on editor load and changing measures
-    var next = true;//#going back and adding something in the middle of level file then adds concat( to the next measure, which breaks things (it is an empty measure with just concat(  )
+    colorNext = true;//#going back and adding something in the middle of level file then adds concat( to the next measure, which breaks things (it is an empty measure with just concat(  )
 
     document.getElementById("editor").hidden = false;
     document.getElementById("sheetMusic").hidden = false;
@@ -707,7 +719,7 @@ function editor(){//#need to add beam support
         element.value = colorSet[element.id];
         element.addEventListener("change", (event) => {
             colorSet[event.target.id] = event.target.value;
-            next = true;
+            colorNext = true;
             drawEdCanv();
         }, {signal: globalAbort.signal});
     });
@@ -747,7 +759,6 @@ function editor(){//#need to add beam support
 
     function inputs(event){
         var id = event.srcElement.id;
-
         if (measure != Number(document.getElementById("measure").value)){
 
             if (measure >= 0 ){
@@ -823,9 +834,9 @@ function editor(){//#need to add beam support
                level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/16'), ");
             }
         }
-        if (next && (String(id.match(/\d+/g)) == id)){
+        if (colorNext && (String(id.match(/\d+/g)) == id)){
             level.rthm[measure] = level.rthm[measure].slice(0, level.rthm[measure].lastIndexOf("'") + 1) +", " + JSON.stringify(colorSet).replaceAll("\"", "'").replaceAll(RegExp(/'(?!#|,|})/g), "") + level.rthm[measure].slice(level.rthm[measure].lastIndexOf("'") + 1)
-            next = false;
+            colorNext = false;
         }
         if (id == "tie"){
             var tieHere =level.rthm[measure].lastIndexOf("score.notes");
