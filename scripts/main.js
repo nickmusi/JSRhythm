@@ -337,7 +337,7 @@ function play(){
 
         if (rhythmArray[i] != undefined){
             if (rhythmArray[i].rest){
-                setTimeout(() => {userPerformance();}, 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)));   
+                setTimeout(() => {userPerformance();}, 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset - Settings.inputOffset)));   
 
                 r = i;
                 while (rhythmArray[r] != undefined && rhythmArray[r].rest){
@@ -938,7 +938,7 @@ function selector(){
     main.hidden = false;
     main.replaceChildren();
 
-    fetch("resources/list.json")//#
+    fetch("resources/list.json")
             .then((response) => response.json())
             .then((items) => {//#need to add custom level option (to select and play custom level) Maybe eventually have a test level button in editor too
                 for (i in items){
