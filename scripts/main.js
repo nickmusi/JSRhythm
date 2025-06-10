@@ -108,10 +108,23 @@ function menus(){
             document.getElementById("sheetMusic").hidden = true;
             document.getElementById("editor").hidden = true;
             document.getElementById("mainMenu").hidden = false;
-            document.getElementById("failMenu").hidden = true;
             //#do same for win menu
             menus();
         }
+        if (name == "next"){
+            abort.abort();
+            globalAbort.abort();
+            globalAbort = new AbortController();
+            event.target.parentElement.hidden = true;
+
+            
+            for (z in document.getElementById("selector").children){
+                if (document.getElementById("selector").children[z].innerHTML == level.title){
+                    loadLevel(String(document.getElementById("selector").children[z].nextElementSibling.id))
+                }
+            }
+        };
+            
         if (name == "inputCal"){
             guide = document.getElementById("calAudio");
             if (use == false){
@@ -316,15 +329,12 @@ function play(){
         if (Math.abs(error) > Settings.threshold){
             fail();
         }
-        else if (rhythmArray[i + 1] != undefined){
-            i++;
-        }
         else{
-            console.log("win");
-            win();
+            i++;
         }
 
         clearTimeout(failTimeID);
+
         if (rhythmArray[i] != undefined){
             if (rhythmArray[i].rest){
                 setTimeout(() => {userPerformance();}, 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)));   
@@ -340,11 +350,18 @@ function play(){
             }
             failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
         }
+        else{
+            win();
+        }
     }
 
     function win(){
-        //#win state
         clearTimeout(failTimeID);
+        setTimeout(() => {
+            document.getElementById("winMenu").hidden = false;
+            menus();
+        }, eval(level.time) * 4 * secsPerBeat * 1000);
+        
     }
 
     function fail(){
@@ -468,12 +485,21 @@ function play(){
     var changed = false;
     var playerTrailPath = new Path2D();
     playerTrailPath.moveTo(0, canvas.height);
+    var position;
 
     function animate(){
         const ctx = canvas.getContext("2d");
         ctx.fillStyle = colorSet.walls;
-        var position = pixPerSec * (audio.currentTime - level.offset - Settings.inputOffset) - canvas.width / 2;
-        playerHeight += multiplier * pixPerSec * (audio.currentTime - prevTime);
+        
+        if (audio.ended){
+            position += 3;
+            playerHeight += multiplier * 3;
+        }
+        else{
+            position = pixPerSec * (audio.currentTime - level.offset - Settings.inputOffset) - canvas.width / 2;
+            playerHeight += multiplier * pixPerSec * (audio.currentTime - prevTime);
+        }
+
 
         if (Math.sign(performance) != Math.sign(multiplier)){
 
@@ -590,8 +616,10 @@ function play(){
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillRect(canvas.width / 2 - Dev.playerWidth / 2, canvas.height - playerHeight - Dev.playerWidth / 2, Dev.playerWidth, Dev.playerWidth);
 
-        window.requestAnimationFrame(animate);
-        //#sheet music scroll mode
+        if (document.getElementById("winMenu").hidden){
+            window.requestAnimationFrame(animate);
+        }
+        
     }
 }
 
@@ -923,19 +951,7 @@ function selector(){
     document.addEventListener("click", (event) => {
 
         if (event.target.tagName == "BUTTON"){
-            fetch(event.target.id)//#
-            .then((response) => response.json())
-            .then((info) => {
-                level = info;
-                secsPerBeat = (1 / level.bpm) * 60;
-                millisPerBeat = secsPerBeat * 1000;
-                pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);
-                pixPerSec = pixPerBeat / secsPerBeat;
-                main.hidden = true;
-                globalAbort.abort();
-                globalAbort = new AbortController();
-                play();
-            });
+            loadLevel(event.target.id);
         }
 
     }, {signal: globalAbort.signal});
@@ -960,6 +976,22 @@ function testCode(code){
         console.log(code);
     }
     
+}
+
+function loadLevel(location){
+    fetch(location)//#
+            .then((response) => response.json())
+            .then((info) => {
+                level = info;
+                secsPerBeat = (1 / level.bpm) * 60;
+                millisPerBeat = secsPerBeat * 1000;
+                pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);
+                pixPerSec = pixPerBeat / secsPerBeat;
+                main.hidden = true;
+                globalAbort.abort();
+                globalAbort = new AbortController();
+                play();
+            });
 }
 
 
