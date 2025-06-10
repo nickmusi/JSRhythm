@@ -422,6 +422,11 @@ function play(){
         //var k = 0;
         var l = 0;
         while (l < rhythmArray.length){
+            if (rhythmArray[l].rest){
+                    restA.moveTo(x - 6, Math.abs(y));
+                    restA.lineTo(x + 6, Math.abs(y));
+            }
+            
             if (Math.abs(y) + Math.sign(y) * pixPerBeat * rhythmArray[l].duration > canvas.height){
                 var x1 = (-(y - canvas.height) / (1)) + x;
                 var y1 = canvas.height;
@@ -466,10 +471,6 @@ function play(){
             l++;
             if (rhythmArray[l] != undefined){
                 y *= -1;
-                if (rhythmArray[l].rest){
-                    restA.moveTo(x - 6, Math.abs(y));
-                    restA.lineTo(x + 6, Math.abs(y));
-                }
             }
             
         }
