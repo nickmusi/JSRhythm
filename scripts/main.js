@@ -279,6 +279,7 @@ function play(){
     inputBool = true;
     audio.currentTime = 0;
     var error;
+    var avgAccuracy = 0;
     var i = 0;
     //var j = 0;
     var performance = 0;
@@ -326,6 +327,8 @@ function play(){
 
         error = (audio.currentTime - Settings.inputOffset - level.offset) / secsPerBeat - (rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0));
         
+        avgAccuracy = ((i * avgAccuracy / 100 + (1 - Math.abs(error))) / (i + 1)) * 100;
+        
         if (Math.abs(error) > Settings.threshold){
             fail();
         }
@@ -357,6 +360,7 @@ function play(){
 
     function win(){
         clearTimeout(failTimeID);
+        document.getElementById("avgAccuracy").innerHTML = "Average Accuracy: " + String(Math.round(avgAccuracy)) + "%";
         setTimeout(() => {
             document.getElementById("winMenu").hidden = false;
             menus();
