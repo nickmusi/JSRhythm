@@ -1,8 +1,7 @@
 {
-    "Test": "test level.json",
     "Cloud Bubble": "resources/levels/Cloud Bubble.json",
-    "new1": "newlevel1.json",
-    "new2": "newlevel2.json",
+    "Electricity": "resources/levels/Electricity.json",
+    "Moon Rocks": "resources/levels/Moon Rocks.json",
     "new3": "newlevel3.json",
     "new4": "newlevel4.json",
     "new5": "newlevel5.json",
