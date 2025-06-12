@@ -35,7 +35,8 @@ var Settings = {
     correctionMode: "snap"
 }
 var Dev = {
-    playerWidth: 20
+    playerWidth: 0.2,//These are in beats so it scales with the rest of level
+    restWidth: 0.125
 }
 var colorSet = {
     walls: '#000000',
@@ -268,6 +269,7 @@ function menus(){
 menus();
 
 function play(){
+    calcCanvSize();
     Settings.correctionMode = document.querySelector('input[name="correction"]:checked').value;
     Settings.sheetMusicMode = document.querySelector('input[name="museMode"]:checked').value;
     document.getElementById("player").hidden = false;
@@ -427,8 +429,8 @@ function play(){
         var l = 0;
         while (l < rhythmArray.length){
             if (rhythmArray[l].rest){
-                    restA.moveTo(x - 6, Math.abs(y));
-                    restA.lineTo(x + 6, Math.abs(y));
+                    restA.moveTo(x - (Dev.restWidth * pixPerBeat / 2), Math.abs(y));
+                    restA.lineTo(x + (Dev.restWidth * pixPerBeat / 2), Math.abs(y));
             }
             
             if (Math.abs(y) + Math.sign(y) * pixPerBeat * rhythmArray[l].duration > canvas.height){
@@ -478,7 +480,7 @@ function play(){
             }
             
         }
-        canvas.width = window.innerWidth;
+        //canvas.width = window.innerWidth;
         if (Settings.sheetMusicMode == "scroll"){
             
             renderAll(level.rthm);
@@ -573,14 +575,14 @@ function play(){
         var rendered = new Path2D(playerTrailPath);
         if (position + canvas.width / 2 >= 0){rendered.lineTo(position + canvas.width / 2, canvas.height - playerHeight);}
         ctx.setTransform(1, 0, 0, 1, -position, 0);
-        ctx.lineWidth = pixPerBeat * Settings.threshold + Dev.playerWidth;
+        ctx.lineWidth = pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat);
         ctx.strokeStyle = colorSet.path;
         ctx.stroke(path);//#need to add rest animation, probably need to add a separate path
         ctx.strokeStyle = colorSet.rest;
-        ctx.lineWidth = Math.sqrt((Math.pow(pixPerBeat * Settings.threshold + Dev.playerWidth, 2)) + (Math.pow(pixPerBeat * Settings.threshold + Dev.playerWidth, 2)));
+        ctx.lineWidth = Math.sqrt((Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)) + (Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)));
         ctx.stroke(restA);
         ctx.strokeStyle = colorSet.trail;
-        ctx.lineWidth = Dev.playerWidth / 2;
+        ctx.lineWidth = (Dev.playerWidth * pixPerBeat) / 2;
         ctx.stroke(rendered);
 
         
@@ -626,7 +628,7 @@ function play(){
         prevTime = audio.currentTime;
         ctx.fillStyle = colorSet.player;
         ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.fillRect(canvas.width / 2 - Dev.playerWidth / 2, canvas.height - playerHeight - Dev.playerWidth / 2, Dev.playerWidth, Dev.playerWidth);
+        ctx.fillRect(canvas.width / 2 - (Dev.playerWidth * pixPerBeat) / 2, canvas.height - playerHeight - (Dev.playerWidth * pixPerBeat) / 2, (Dev.playerWidth * pixPerBeat), (Dev.playerWidth * pixPerBeat));
 
         if (document.getElementById("winMenu").hidden){
             window.requestAnimationFrame(animate);
@@ -778,7 +780,7 @@ function editor(){//#need to add beam support
         edPath.moveTo(0, edCanv.height / 2);
         edPath.lineTo(edCanv.width / 2, edCanv.height / 2);
         edCtx.strokeStyle = colorSet.trail;
-        edCtx.lineWidth = Dev.playerWidth / 2;
+        edCtx.lineWidth = (Dev.playerWidth * pixPerBeat) / 2;
         edCtx.stroke(edPath);
         edPath = new Path2D();
         edPath.moveTo(edCanv.width * 2 / 3 - 6, edCanv.height / 2);
@@ -788,7 +790,7 @@ function editor(){//#need to add beam support
         edCtx.stroke(edPath);
         edCtx.fillStyle = colorSet.player;
         edCtx.setTransform(1, 0, 0, 1, 0, 0);
-        edCtx.fillRect(edCanv.width / 2 - Dev.playerWidth / 2, edCanv.height / 2 - Dev.playerWidth / 2, Dev.playerWidth, Dev.playerWidth);
+        edCtx.fillRect(edCanv.width / 2 - (Dev.playerWidth * pixPerBeat) / 2, edCanv.height / 2 - (Dev.playerWidth * pixPerBeat) / 2, (Dev.playerWidth * pixPerBeat), (Dev.playerWidth * pixPerBeat));
     };
 
     
@@ -997,8 +999,7 @@ function loadLevel(location){
                 level = info;
                 secsPerBeat = (1 / level.bpm) * 60;
                 millisPerBeat = secsPerBeat * 1000;
-                pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);
-                pixPerSec = pixPerBeat / secsPerBeat;
+                calcCanvSize();
                 main.hidden = true;
                 globalAbort.abort();
                 globalAbort = new AbortController();
@@ -1006,6 +1007,12 @@ function loadLevel(location){
             });
 }
 
+function calcCanvSize(){
+    document.getElementById("game").width = window.innerWidth;
+    document.getElementById("game").height = String(Math.min(document.getElementById("game").width / 2, window.innerHeight / 2));
+    pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);//#add some scaling for smaller devices, etc, but have to keep level rendering the same across devices (must scale after)
+    pixPerSec = pixPerBeat / secsPerBeat;
+}
 
 async function downloadBlob(inputblob, name) {
     const downloadelem = document.createElement("a");
