@@ -325,7 +325,7 @@ function play(){
             colorSet = rhythmArray[i].colors;//#add time signature change, tempo change code here; add option to not have flashes and option to set personal colors (for vision/making only the sheet music visible)
         }
 
-        if(Settings.sheetMusicMode == "line"){render(level.rthm, j);};
+        if(Settings.sheetMusicMode == "line"){render(level.rthm, rhythmArray[i].measure);};
 
         if (rhythmArray[i].rest){
             error = 0;

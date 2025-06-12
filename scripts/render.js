@@ -82,9 +82,9 @@ function render(measures = [], position = 0){
   score = vf.EasyScore();
   score.set({ time: level.time });
   x = 0;
-  var a = Math.min(Math.floor((2 + position) / 4) * 4, measures.length - 1);
-  var b = Math.min(1 + Math.floor((1 + position) / 4) * 4, measures.length - 1);
-  var c = Math.min(2 + Math.floor((position) / 4) * 4, measures.length - 1);
+  var a = Math.min(Math.floor((2 + position) / 4) * 4, measures.length - 4);
+  var b = Math.min(1 + Math.floor((1 + position) / 4) * 4, measures.length - 3);
+  var c = Math.min(2 + Math.floor((position) / 4) * 4, measures.length - 2);
   var d = Math.min(3 + Math.max(Math.floor((-1 + position) / 4) * 4, 0), measures.length - 1);
   newMeasure(measures[a], 250, {time: level.time, clef: "percussion"});
   if (measures[b] != undefined){
