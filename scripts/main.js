@@ -894,7 +894,7 @@ function editor(){//#need to add beam support
             }
         }
         if (id == "."){//#dotted rests mess up, the dot needs to be placed after /r
-            var here =level.rthm[measure].search(/(?<=\/r)\'.*$|(?<=\/\d)\'.*$|(?<=\/\d\d)\'.*$|(?<=\.)\'.*$|(?<=\/\d\d\d)\'.*$/g);
+            var here =level.rthm[measure].search(/(\d|r|\.)'(?!.*(\d|r|\.)')/g) + 1;
             if (vexCodetoRhythmArray([level.rthm[measure].slice(0, here) + "." +level.rthm[measure].slice(here) + endParen]).reduce((prev, current) => prev + current.duration, 0) <= eval(testCode(level.time)) * 4){
                level.rthm[measure] =level.rthm[measure].slice(0, here) + "." +level.rthm[measure].slice(here);
             }
@@ -910,8 +910,18 @@ function editor(){//#need to add beam support
             else {
                 var numNotes = document.getElementById("notes").value;
                 var notesOccupied = document.getElementById("length").value;
+                if (level.rthm[measure].slice(level.rthm[measure].lastIndexOf("tuplet(")).match(/(?<!\d|[0-9a-fA-F]|'.)[1-4](?!\d|[0-9a-fA-F])/) != null){
+                    level.rthm[measure] = level.rthm[measure].replace(/score\.beam(?!.+score\.beam)/g, "");
+                }
                 if (numNotes == ""){
                     numNotes = level.rthm[measure].slice(level.rthm[measure].lastIndexOf("tuplet(")).matchAll("notes").toArray().length;
+                }
+                if (notesOccupied == ""){
+                    c = 0;
+                    while (Math.pow(2, c) < numNotes){
+                        c++
+                    }
+                    notesOccupied = Math.pow(2, c - 1);
                 }
                level.rthm[measure] =level.rthm[measure].concat("), {num_notes: " + String(numNotes) +", notes_occupied: " + String(notesOccupied) + "})).concat(");
                 endParen = endParen.replace("))", "");
@@ -922,7 +932,7 @@ function editor(){//#need to add beam support
             menus();
             document.getElementById("editorMenu").hidden = false;
         }
-        if ((!(document.getElementById("tuplet").checked) && id != "delete")){//#right now a triplet ending the measure messes up the auto next measure
+        if ((!(document.getElementById("tuplet").checked) && id != "delete")){
             if (vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0) > eval(testCode(level.time)) * 4){
                 var end = level.rthm[measure].lastIndexOf("score.notes")
                 level.rthm[measure] =level.rthm[measure].slice(0, end);
@@ -936,7 +946,6 @@ function editor(){//#need to add beam support
                     document.getElementById(String(Math.pow(2, f))).click();
                     if (fill > 0){
                         document.getElementById("tie").click();
-                        console.log("here")
                     }
                 }
             }
