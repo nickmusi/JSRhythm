@@ -508,8 +508,8 @@ function play(){
         ctx.fillStyle = colorSet.walls;
         
         if (audio.ended){
-            position += 3;
-            playerHeight += multiplier * 3;
+            position += 0.03 * pixPerBeat;
+            playerHeight += multiplier * 0.03 * pixPerBeat;
         }
         else{
             position = pixPerSec * (audio.currentTime - level.offset - Settings.inputOffset) - canvas.width / 2;
@@ -1032,7 +1032,7 @@ function loadLevel(location){
 
 function calcCanvSize(){
     document.getElementById("game").width = window.innerWidth;
-    document.getElementById("game").height = String(Math.min(document.getElementById("game").width / 2, window.innerHeight / 2));
+    document.getElementById("game").height = String(Math.min(document.getElementById("game").width / 2.5, window.innerHeight / 2));
     pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);//#add some scaling for smaller devices, etc, but have to keep level rendering the same across devices (must scale after)
     pixPerSec = pixPerBeat / secsPerBeat;
 }
