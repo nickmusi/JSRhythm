@@ -327,9 +327,15 @@ function play(){
 
         if(Settings.sheetMusicMode == "line"){render(level.rthm, j);};
 
-        error = (audio.currentTime - Settings.inputOffset - level.offset) / secsPerBeat - (rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0));
+        if (rhythmArray[i].rest){
+            error = 0;
+            console.log("Rested");
+        }
+        else{
+            error = (audio.currentTime - Settings.inputOffset - level.offset) / secsPerBeat - (rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0));
+            avgAccuracy = ((i * avgAccuracy / 100 + (1 - Math.abs(error))) / (i + 1)) * 100;
+        }
         
-        avgAccuracy = ((i * avgAccuracy / 100 + (1 - Math.abs(error))) / (i + 1)) * 100;
         
         if (Math.abs(error) > Settings.threshold){
             fail();
@@ -380,7 +386,7 @@ function play(){
         //playEvents();
     }
 
-    function calculatePosition(){
+    function calculatePosition(){//#add practice mode, checkpoints, etc.
         var it = 0;
         while (rhythmArray.slice(0, it).reduce((prev, current,) => prev + current.duration, 0) < ((document.getElementById("audio").currentTime - level.offset) / secsPerBeat)){
             it++;
@@ -546,11 +552,11 @@ function play(){
                             playerTrailPath.lineTo(rhythmArray[i-2].x, rhythmArray[i - 2].y);
                         //}
                         
-                        playerHeight = playerHeight + performance * 2 * ((position + canvas.width / 2) - rhythmArray[i - 2].x);//#not done with fix                        
+                        playerHeight = playerHeight + performance * 2 * ((position + canvas.width / 2) - rhythmArray[i - 2].x);                       
                     }
                     else{
                         multiplier = performance;
-                        playerHeight = playerHeight + performance * error * pixPerBeat;//must be this because cannot acces i-2 on first pass
+                        playerHeight = playerHeight + performance * ((position + canvas.width / 2));//assumes starting at rhythmArray[i - 2].x of zero, won't work if ever a zero multiplier is not the start of the level
                     }
                 }
                 else{
