@@ -893,8 +893,8 @@ function editor(){//#need to add beam support
                 endParen = endParen + "))"
             }
         }
-        if (id == "."){//#dotted rests mess up, the dot needs to be placed after /r
-            var here =level.rthm[measure].search(/(\d|r|\.)'(?!.*(\d|r|\.)')/g) + 1;
+        if (id == "."){
+            var here =level.rthm[measure].search(/(?<!#([0-9a-fA-F]{5}))(\d|r|\.)'(?!.*(?<!#([0-9a-fA-F]{5}))(\d|r|\.)')/g) + 1;
             if (vexCodetoRhythmArray([level.rthm[measure].slice(0, here) + "." +level.rthm[measure].slice(here) + endParen]).reduce((prev, current) => prev + current.duration, 0) <= eval(testCode(level.time)) * 4){
                level.rthm[measure] =level.rthm[measure].slice(0, here) + "." +level.rthm[measure].slice(here);
             }
