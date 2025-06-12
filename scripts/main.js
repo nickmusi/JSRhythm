@@ -329,7 +329,6 @@ function play(){
 
         if (rhythmArray[i].rest){
             error = 0;
-            console.log("Rested");
         }
         else{
             error = (audio.currentTime - Settings.inputOffset - level.offset) / secsPerBeat - (rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0));
@@ -918,20 +917,28 @@ function editor(){//#need to add beam support
                 endParen = endParen.replace("))", "");
             } 
         }
-        if (id == "go"){
-            console.log(level.rthm);
-        }
         if (event.key == "Escape"){
             inputBool = false;
             menus();
             document.getElementById("editorMenu").hidden = false;
         }
         if ((!(document.getElementById("tuplet").checked) && id != "delete")){//#right now a triplet ending the measure messes up the auto next measure
-            if (vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current, 0) > eval(testCode(level.time)) * 4){
+            if (vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0) > eval(testCode(level.time)) * 4){
                 var end = level.rthm[measure].lastIndexOf("score.notes")
-               level.rthm[measure] =level.rthm[measure].slice(0, end);
-                document.getElementById((4 / (eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0))).toString()).click();//#dotted notes do not auto fill at end of measure
-
+                level.rthm[measure] =level.rthm[measure].slice(0, end);
+                var fill = ((eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0)));
+                while (fill > 0){
+                    f = 0
+                    while (1 / Math.pow(2, f) * 4 > fill){
+                        f++
+                    }
+                    fill = fill - (1 / Math.pow(2, f)) * 4;
+                    document.getElementById(String(Math.pow(2, f))).click();
+                    if (fill > 0){
+                        document.getElementById("tie").click();
+                        console.log("here")
+                    }
+                }
             }
             if (id != "delete"){
                 if (Number(vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0).toFixed(10)) == eval(testCode(level.time)) * 4){
