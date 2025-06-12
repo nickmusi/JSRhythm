@@ -129,7 +129,7 @@ function editRender(measures = [], position = 0){
   if ((measures[Math.max(position - 1, 2)] != undefined) && (measures[Math.max(position - 1, 2)] != "[].concat(")){
     newMeasure(measures[Math.max(position - 1, 2)], 250);
   }
-  if ((measures[Math.max(position, 3)] != undefined) && (measures[Math.max(position - 3)] != "[].concat(")){
+  if ((measures[Math.max(position, 3)] != undefined) && (measures[Math.max(position, 3)] != "[].concat(")){
     newMeasure(measures[Math.max(position, 3)], 250);
   }
 }

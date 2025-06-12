@@ -745,6 +745,7 @@ function rhythmArraytoVexflow(array = []){
 }
 
 function editor(){//#need to add beam support
+    calcCanvSize();
     var measure = -2;
     var endParen = ")";//#editor needs to load colors from level file on editor load and changing measures
     colorNext = true;//#going back and adding something in the middle of level file then adds concat( to the next measure, which breaks things (it is an empty measure with just concat(  )
@@ -921,19 +922,19 @@ function editor(){//#need to add beam support
         }
         if ((!(document.getElementById("tuplet").checked) && id != "delete")){//#right now a triplet ending the measure messes up the auto next measure
             if (vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current, 0) > eval(testCode(level.time)) * 4){
-                var end =level.rthm[measure].lastIndexOf("score.notes")
+                var end = level.rthm[measure].lastIndexOf("score.notes")
                level.rthm[measure] =level.rthm[measure].slice(0, end);
                 document.getElementById((4 / (eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0))).toString()).click();//#dotted notes do not auto fill at end of measure
 
             }
             if (id != "delete"){
                 if (Number(vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0).toFixed(10)) == eval(testCode(level.time)) * 4){
-               level.rthm[measure] = level.rthm[measure] + endParen;
-                editRender(level.rthm, measure);
-                //measure += 1;
-                document.getElementById("measure").value = String(measure + 1);
-                //level.rthm.splice(measure, 0, "[].concat(");
-                endParen = "";
+                    level.rthm[measure] = level.rthm[measure] + endParen;
+                    editRender(level.rthm, measure);
+                    //measure += 1;
+                    document.getElementById("measure").value = String(measure + 1);
+                    //level.rthm.splice(measure, 0, "[].concat(");
+                    endParen = "";
                 }
             }
         }
