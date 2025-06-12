@@ -478,9 +478,13 @@ function play(){
             }
             
         }
+        canvas.width = window.innerWidth;
         if (Settings.sheetMusicMode == "scroll"){
+            
             renderAll(level.rthm);
             svg = document.getElementById("sheetMusic").children.item(0);
+            svg.setAttribute("width", String(canvas.width));
+            svg.setAttribute("style", "");
         }
         window.requestAnimationFrame(animate);
     }
@@ -555,7 +559,10 @@ function play(){
         }
 
         if (Settings.sheetMusicMode == "scroll"){
-            svg.setAttribute("style", "left: " + String(-Math.round(position)) + "px;" + " position: relative;");        }
+            //svg.setAttribute("style", "left: " + String(-Math.round(position)) + "px;" + " position: relative;");
+            svg.setAttribute("viewBox", String(position) + ", 0, " + (String(canvas.width)) + ", 200");
+            //svg.setAttribute("viewBox", "0, 0, 300, 200");
+        }
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillRect(0, 0, canvas.width, canvas.height);
