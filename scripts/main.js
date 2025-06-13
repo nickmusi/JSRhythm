@@ -240,6 +240,11 @@ function menus(){
             Settings.inputOffset = Number(document.getElementById("inputOffset").value);
         }
         if (name == "save"){
+            for (i in level.rthm){
+                if (level.rthm[i] == "[].concat("){
+                    level.rthm.splice(i, 1);
+                }
+            }
             for (i in level){
                 if (String(i) != 'rthm'){
                     level[i] = document.getElementById(String(i)).value;
