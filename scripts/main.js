@@ -383,7 +383,8 @@ function play(){
     function fail(){
         clearTimeout(failTimeID);
         audio.pause();
-        document.getElementById("error").innerHTML = error;
+        document.getElementById("progress").innerHTML = String(Math.round(audio.currentTime / audio.duration * 100)) + "% Progress";
+        document.getElementById("error").innerHTML = String(error) + " beats off!";
         //console.log("Incorrect! Error " + String(Math.round(100 * error)) + "%");
         document.getElementById("failMenu").hidden = false;
         menus();
