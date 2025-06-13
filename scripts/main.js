@@ -937,16 +937,24 @@ function editor(){//#need to add beam support
                 var end = level.rthm[measure].lastIndexOf("score.notes")
                 level.rthm[measure] =level.rthm[measure].slice(0, end);
                 var fill = ((eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0)));
+                var val = []
+                var h = 0;
                 while (fill > 0){
                     f = 0
                     while (1 / Math.pow(2, f) * 4 > fill){
                         f++
                     }
                     fill = fill - (1 / Math.pow(2, f)) * 4;
-                    document.getElementById(String(Math.pow(2, f))).click();
-                    if (fill > 0){
+                    val[h] = String(Math.pow(2, f));
+                    h++;
+                }
+                h -= 1;
+                while (h >= 0){
+                    document.getElementById(val[h]).click();
+                    if (h != 0){
                         document.getElementById("tie").click();
                     }
+                    h -= 1;
                 }
             }
             if (id != "delete"){
