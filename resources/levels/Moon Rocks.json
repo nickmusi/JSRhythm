@@ -76,6 +76,6 @@
         "[].concat((score.tuplet([].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), ), {num_notes: 3, notes_occupied: 2})).concat((score.tuplet([].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), ), {num_notes: 3, notes_occupied: 2}))))",
         "[].concat((score.tuplet([].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), ), {num_notes: 3, notes_occupied: 2})).concat(score.notes('B4/8, B4/8, B4/8, B4/8')))",
         "[].concat(score.notes('B4/1'))",
-        "[].concat(score.notes('B4/4'), score.notes('B4/2.'))"
+        "[].concat(score.notes('B4/4'), score.notes('B4/2/r.'))"
     ]
 }
