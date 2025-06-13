@@ -223,7 +223,7 @@ function menus(){
         }
         if (name == "clearAll"){
             level.rthm = [];
-            document.getElementById("measure").value = 0;
+            document.getElementById("measure").value = -100;
         }
         if (name == "settingsClose"){
             event.target.parentElement.hidden = true;
@@ -808,6 +808,9 @@ function editor(){//#need to add beam support
                 level.rthm[measure] += endParen;
             }*/
             
+            if (document.getElementById("measure").value == String(-100)){
+                document.getElementById("measure").value = String(0);
+            }
             measure = Number(document.getElementById("measure").value);
 
             if (id != "delete"){
