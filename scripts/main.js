@@ -1,32 +1,13 @@
-var level = {//wurtz 162.16 immediate
-        "time": "4/4",//134.83 3 measures before
+var level = {
+        "time": "4/4",
         "bpm": 120,
-        "offset": 2.5,
-        "title": null,
-        "artist": null,
-        "location": null,
-        "creator": null,
-        "difficulty": null,
-        "rthm":
-        [
-            "score.notes('B4/1')",
-            "score.notes('B4/1')",
-            "score.notes('B4/1')",
-            "score.notes('B4/1')",
-            
-            "[].concat(score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), )",
-            "[].concat(score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), )",
-            "[].concat(score.notes('B4/8.'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/16'), score.notes('B4/8.'), )",
-            "[].concat(score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), )",
-            "score.notes('B4/1')",
-            "score.notes('B4/1')",
-            "score.notes('B4/8., B4/16, B4/8, B4/16').concat(tie(score.notes('B4/16, B4/16'))).concat(score.notes('B4/16, B4/8, B4/8, B4/8'))",
-            "[].concat(score.notes('B4/8.'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/16'), score.notes('B4/8.'), )",
-            "[].concat(score.notes('B4/8.'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), )",
-            "score.notes('B4/8., B4/16, B4/8, B4/16').concat(tie(score.notes('B4/16, B4/16'))).concat(score.notes('B4/16, B4/8, B4/8, B4/8'))",
-            "score.notes('B4/8, B4/8, B4/4, B4/2')"
-            
-        ]
+        "offset": 0,
+        "title": "Title",
+        "artist": "Artist",
+        "location": "",
+        "creator": "Creator",
+        "difficulty": "Difficulty",
+        "rthm": []
 };
 var Settings = {
     inputOffset: 0.025,
@@ -224,15 +205,17 @@ function menus(){
             }
             level.bpm = Number(level.bpm);
             level.offset = Number(level.offset);
-            if(document.getElementById("levelFile").value == ""){
-                level.rthm = ["[].concat("];
-            }
             if (document.getElementById("location").value != ""){
                 level.location = window.URL.createObjectURL(document.getElementById("location").files[0]);
                 document.getElementById("audio").src = level.location;
             }
+            editRender(level.rthm, document.getElementById("measure").value);
             abort.abort();
             setTimeout(()=>{inputBool = true;}, 0.1);
+        }
+        if (name == "clearAll"){
+            level.rthm = [];
+            document.getElementById("measure").value = 0;
         }
         if (name == "settingsClose"){
             event.target.parentElement.hidden = true;
@@ -253,6 +236,24 @@ function menus(){
             level.bpm = Number(level.bpm);
             level.offset = Number(level.offset);
             downloadBlob(new Blob([JSON.stringify(level, null, 4)]), "level.json")
+        }
+        if (name == "testLevel"){
+            for (i in level.rthm){
+                if (level.rthm[i] == "[].concat("){
+                    level.rthm.splice(i, 1);
+                }
+            }
+            for (i in level){
+                if (String(i) != 'rthm'){
+                    level[i] = document.getElementById(String(i)).value;
+                }
+            }
+            level.bpm = Number(level.bpm);
+            level.offset = Number(level.offset);
+            level.location = window.URL.createObjectURL(document.getElementById("location").files[0])
+            event.target.parentElement.hidden = true;
+            document.getElementById("editor").hidden = true;
+            play();
         }
         if (name == "load"){
             colorNext = false;
@@ -375,6 +376,7 @@ function play(){
         document.getElementById("avgAccuracy").innerHTML = "Average Accuracy: " + String(Math.round(avgAccuracy)) + "%";
         setTimeout(() => {
             document.getElementById("winMenu").hidden = false;
+            audio.pause();
             menus();
         }, eval(level.time) * 4 * secsPerBeat * 1000);
         
@@ -385,10 +387,8 @@ function play(){
         audio.pause();
         document.getElementById("progress").innerHTML = String(Math.round(audio.currentTime / audio.duration * 100)) + "% Progress";
         document.getElementById("error").innerHTML = String(error) + " beats off!";
-        //console.log("Incorrect! Error " + String(Math.round(100 * error)) + "%");
         document.getElementById("failMenu").hidden = false;
         menus();
-        //playEvents();
     }
 
     function calculatePosition(){//#add practice mode, checkpoints, etc.
@@ -652,12 +652,14 @@ function vexCodetoRhythmArray(vexCodeArray = []){//#make beaming automatic on tu
     all = "[]";
     //Vexcode notes must use numbers, not letters for duration and declare length for each note
     for (i in vexCodeArray){
-        vexCode = testCode(vexCodeArray[i]).replaceAll("score.notes", "vNotes");
-        vexCode = vexCode.replaceAll("tie", "vTie");
-        vexCode = vexCode.replaceAll("score.tuplet", "vTuplet");
-        vexCode = vexCode.replaceAll("score.beam", "");
-        vexCode = vexCode.replaceAll(" ", "");
-        all = all + ".concat(measure([]" +vexCode.slice(2) + ", " + String(i) + "))";//vexcode must start with [](it slices this)
+        if (vexCodeArray[i] != undefined){
+            vexCode = testCode(vexCodeArray[i]).replaceAll("score.notes", "vNotes");
+            vexCode = vexCode.replaceAll("tie", "vTie");
+            vexCode = vexCode.replaceAll("score.tuplet", "vTuplet");
+            vexCode = vexCode.replaceAll("score.beam", "");
+            vexCode = vexCode.replaceAll(" ", "");
+            all = all + ".concat(measure([]" +vexCode.slice(2) + ", " + String(i) + "))";
+        }//vexcode must start with [](it slices this)
     }
     return eval(all);
 
@@ -756,6 +758,11 @@ function rhythmArraytoVexflow(array = []){
 }
 
 function editor(){//#need to add beam support
+    for (i in level){
+        if (String(i) != 'rthm' && String(i) != "location"){
+            document.getElementById(String(i)).value = level[i];
+        }
+    }
     calcCanvSize();
     var measure = -2;
     var endParen = ")";//#editor needs to load colors from level file on editor load and changing measures
@@ -812,7 +819,7 @@ function editor(){//#need to add beam support
         var id = event.srcElement.id;
         if (measure != Number(document.getElementById("measure").value)){
 
-            if (measure >= 0 ){
+            /*if (measure >= 0 ){
                 var remain = eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0);
                 if (Math.floor(remain / 4) > 0){
                     level.rthm[measure] += "score.notes('B4/1/r'),";
@@ -835,7 +842,7 @@ function editor(){//#need to add beam support
                     remain += -0.25;
                 }
                 level.rthm[measure] += endParen;
-            }
+            }*/
             
             measure = Number(document.getElementById("measure").value);
 
@@ -1019,7 +1026,7 @@ function selector(){
 }
 
 function testCode(code){
-    if (code == code.matchAll(/score|notes|beam|{walls|path|#|trail|player|rest|tuplet|{num_|:|_occupied|}|\[]\.concat|concat|tie|r|\.|\(|\)|"|'|[A-G]|[a-g]|\/|\d| |,/g).reduce((prev, current) => prev + current.toString(), 0).slice(1)){
+    if (code == code.matchAll(/score|undefined|notes|beam|{walls|path|#|trail|player|rest|tuplet|{num_|:|_occupied|}|\[]\.concat|concat|tie|r|\.|\(|\)|"|'|[A-G]|[a-g]|\/|\d| |,/g).reduce((prev, current) => prev + current.toString(), 0).slice(1)){
         return code;
     }
     else{
@@ -1034,8 +1041,6 @@ function loadLevel(location){
             .then((response) => response.json())
             .then((info) => {
                 level = info;
-                secsPerBeat = (1 / level.bpm) * 60;
-                millisPerBeat = secsPerBeat * 1000;
                 calcCanvSize();
                 main.hidden = true;
                 globalAbort.abort();
@@ -1047,6 +1052,8 @@ function loadLevel(location){
 function calcCanvSize(){
     document.getElementById("game").width = window.innerWidth;
     document.getElementById("game").height = String(Math.min(document.getElementById("game").width / 2.5, window.innerHeight / 2));
+    secsPerBeat = (1 / level.bpm) * 60;
+    millisPerBeat = secsPerBeat * 1000;
     pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);//#add some scaling for smaller devices, etc, but have to keep level rendering the same across devices (must scale after)
     pixPerSec = pixPerBeat / secsPerBeat;
 }

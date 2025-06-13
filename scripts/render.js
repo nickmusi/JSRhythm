@@ -121,8 +121,10 @@ function editRender(measures = [], position = 0){
   score = vf.EasyScore();
   score.set({ time: level.time });
   x = 0;
-  
-  newMeasure(measures[Math.max(position - 3, 0)], 250, {time: level.time, clef: "percussion"});
+
+  if ((measures[Math.max(position - 3, 0)] != undefined) && (measures[Math.max(position - 2, 1)] != "[].concat(")){
+    newMeasure(measures[Math.max(position - 3, 0)], 250, {time: level.time, clef: "percussion"});
+  }
   if ((measures[Math.max(position - 2, 1)] != undefined) && (measures[Math.max(position - 2, 1)] != "[].concat(")){
     newMeasure(measures[Math.max(position - 2, 1)], 250);
   }
