@@ -20,6 +20,15 @@ if (JSON.parse(window.localStorage.getItem("settings")) != null){
     Settings = JSON.parse(window.localStorage.getItem("settings"));
 }
 
+
+var records = {
+
+}
+
+if (JSON.parse(window.localStorage.getItem("records")) != null){
+    records = JSON.parse(window.localStorage.getItem("records"));
+}
+
 var Dev = {
     playerWidth: 0.2,//These are in beats so it scales with the rest of level
     restWidth: 0.125
@@ -317,6 +326,10 @@ function play(){
                 inputBool == false;
                 audio.pause();
                 document.getElementById("pauseMenu").hidden = false;
+                if (records[String(level.title)] == undefined || audio.currentTime / audio.duration * 100 > records[level.title].progress){
+                    records[String(level.title)] = {progress: audio.currentTime / audio.duration * 100};
+                    window.localStorage.setItem("records", JSON.stringify(records));
+                }
                 clearTimeout(failTimeID);
                 menus();
             }
@@ -383,6 +396,17 @@ function play(){
     function win(){
         clearTimeout(failTimeID);
         document.getElementById("avgAccuracy").innerHTML = "Average Accuracy: " + String(Math.round(avgAccuracy)) + "%";
+        if (records[level.title] == undefined){
+            records[level.title] = {progress: "Done", accuracy: avgAccuracy};
+        }
+        else if (records[level.title].accuracy != undefined){
+            records[level.title] = {progress: "Done", accuracy: Math.max(avgAccuracy, records[level.title].accuracy)};
+        }
+        else{
+            records[level.title] = {progress: "Done", accuracy: avgAccuracy};
+        }
+        window.localStorage.setItem("records", JSON.stringify(records));
+        
         setTimeout(() => {
             document.getElementById("winMenu").hidden = false;
             audio.pause();
@@ -394,8 +418,15 @@ function play(){
     function fail(){
         clearTimeout(failTimeID);
         audio.pause();
-        document.getElementById("progress").innerHTML = String(Math.round(audio.currentTime / audio.duration * 100)) + "% Progress";
-        document.getElementById("error").innerHTML = String(error) + " beats off!";
+        if (records[String(level.title)] == undefined || audio.currentTime / audio.duration * 100 > records[level.title].progress){
+            records[String(level.title)] = {progress: audio.currentTime / audio.duration * 100};
+            document.getElementById("progress").innerHTML = "New Record! " + String(Math.round(records[String(level.title)].progress)) + "% Progress";
+            window.localStorage.setItem("records", JSON.stringify(records));
+        }
+        else{
+            document.getElementById("progress").innerHTML = String(Math.round(audio.currentTime / audio.duration * 100)) + "% Progress";
+        }
+        document.getElementById("error").innerHTML = String(Math.round(error * 100) / 100) + " beats off!";
         document.getElementById("failMenu").hidden = false;
         menus();
     }
@@ -967,7 +998,18 @@ function selector(){
             .then((response) => response.json())
             .then((items) => {//#need to add custom level option (to select and play custom level) Maybe eventually have a test level button in editor too
                 for (i in items){
-                    l = main.appendChild(document.createElement("button"));
+                    div = main.appendChild(document.createElement("div"));
+                    l = div.appendChild(document.createElement("button"));
+                    m = div.appendChild(document.createElement("p"));
+                    m.innerHTML = "Progress: ";
+                    if (records[String(i)] != undefined){
+                        if (records[String(i)].progress == "Done"){
+                            m.innerHTML = "Accuracy: " + String(Math.round(records[String(i)].accuracy)) + "%"
+                        }
+                        else{
+                            m.innerHTML = "Progress: " + String(Math.round(records[String(i)].progress)) + "%";//#level.title must match the name in list.json... maybe make one big levels object to make accesssing these easier?
+                        }
+                    }
                     l.innerHTML = String(i)
                     l.setAttribute("id", String(items[String(i)]));
                     l.setAttribute("class", "menuButton")
