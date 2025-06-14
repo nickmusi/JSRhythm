@@ -12,8 +12,7 @@ var level = {
 var Settings = {
     inputOffset: 0.025,
     threshold: 0.3,
-    sheetMusicMode: "scroll",
-    correctionMode: "snap"
+    sheetMusicMode: "scroll"
 }
 
 if (JSON.parse(window.localStorage.getItem("settings")) != null){
@@ -238,7 +237,7 @@ function menus(){
             event.target.parentElement.hidden = true;
             Settings.threshold = Number(document.getElementById("threshold").value);
             Settings.inputOffset = Number(document.getElementById("inputOffset").value);
-            document.querySelector('input[name="museMode"]:checked').value;
+            Settings.sheetMusicMode = document.querySelector('input[name="museMode"]:checked').value;
             window.localStorage.setItem("settings", JSON.stringify(Settings));
         }
         if (name == "save"){
@@ -565,30 +564,29 @@ function play(){
 
         if (Math.sign(performance) != Math.sign(multiplier)){
 
-            if (Settings.correctionMode == "snap"){
-                if (Math.abs(error) <= Settings.threshold){
-                    if (multiplier != 0){
-                        multiplier = performance;
-                
-                        //if (Math.abs(canvas.height - playerHeight - rhythmArray[i - 2].y) > pixPerBeat * Settings.threshold){
-                            
-                        //}
-                        //else{
-                            playerTrailPath.lineTo(rhythmArray[i-2].x, rhythmArray[i - 2].y);
-                        //}
+            if (Math.abs(error) <= Settings.threshold){
+                if (multiplier != 0){
+                    multiplier = performance;
+            
+                    //if (Math.abs(canvas.height - playerHeight - rhythmArray[i - 2].y) > pixPerBeat * Settings.threshold){
                         
-                        playerHeight = playerHeight + performance * 2 * ((position + canvas.width / 2) - rhythmArray[i - 2].x);                       
-                    }
-                    else{
-                        multiplier = performance;
-                        playerHeight = playerHeight + performance * ((position + canvas.width / 2));//assumes starting at rhythmArray[i - 2].x of zero, won't work if ever a zero multiplier is not the start of the level
-                    }
+                    //}
+                    //else{
+                        playerTrailPath.lineTo(rhythmArray[i-2].x, rhythmArray[i - 2].y);
+                    //}
+                    
+                    playerHeight = playerHeight + performance * 2 * ((position + canvas.width / 2) - rhythmArray[i - 2].x);                       
                 }
                 else{
                     multiplier = performance;
+                    playerHeight = playerHeight + performance * ((position + canvas.width / 2));//assumes starting at rhythmArray[i - 2].x of zero, won't work if ever a zero multiplier is not the start of the level
                 }
-                
             }
+            else{
+                multiplier = performance;
+            }
+                
+            
         }
 
         if (Settings.sheetMusicMode == "scroll"){
@@ -618,14 +616,14 @@ function play(){
 
         
         if (playerHeight > canvas.height){
-            if ((Settings.correctionMode == "snap") && ((Math.abs(canvas.height - playerHeight - rhythmArray[i - 1].y) > 2 * Settings.threshold * pixPerBeat) || rhythmArray[i - 2].x - (position + canvas.width / 2) > 2 * pixPerBeat * (Settings.threshold))){
+            if (((Math.abs(canvas.height - playerHeight - rhythmArray[i - 1].y) > 2 * Settings.threshold * pixPerBeat) || rhythmArray[i - 2].x - (position + canvas.width / 2) > 2 * pixPerBeat * (Settings.threshold))){
                 playerTrailPath.lineTo(position + canvas.width / 2, canvas.height - playerHeight);
                 playerHeight = playerHeight - canvas.height;
                 playerTrailPath.moveTo(position + canvas.width / 2 - 30, canvas.height - playerHeight + 30);
             }
         }
         if (playerHeight < 0){
-            if ((Settings.correctionMode == "snap") && ((Math.abs(canvas.height - playerHeight - rhythmArray[i - 1].y) > 2 * Settings.threshold * pixPerBeat) || rhythmArray[i - 2].x - (position + canvas.width / 2) > 2 * pixPerBeat * (Settings.threshold))){
+            if (((Math.abs(canvas.height - playerHeight - rhythmArray[i - 1].y) > 2 * Settings.threshold * pixPerBeat) || rhythmArray[i - 2].x - (position + canvas.width / 2) > 2 * pixPerBeat * (Settings.threshold))){
                 playerTrailPath.lineTo(position + canvas.width / 2, canvas.height - playerHeight);
                 playerHeight = canvas.height + playerHeight;
                 playerTrailPath.moveTo(position + canvas.width / 2 - 30, canvas.height - playerHeight - 30);
