@@ -44,6 +44,8 @@ var millisPerBeat;
 var globalAbort = new AbortController();
 var inputBool = true;
 
+var loopAni = false;
+
 var raNote = {
     duration: 0,
     measure: 0,
@@ -62,6 +64,7 @@ var raNote = {
 var colorNext = true;
 
 function menus(){
+    loopAni = false;
     const abort = new AbortController();
     inputBool = false;
     document.addEventListener("click", (event) => {inputs(event);}, {signal: abort.signal});
@@ -293,6 +296,7 @@ function menus(){
 menus();
 
 function play(){
+    loopAni = true;
     calcCanvSize();
     Settings.sheetMusicMode = document.querySelector('input[name="museMode"]:checked').value;
     document.getElementById("player").hidden = false;
@@ -445,7 +449,8 @@ function play(){
     }
     
     function playEvents(){
-        
+        loopAni = true;
+        window.requestAnimationFrame(animate);
         if (rhythmArray[0].rest && i == 0){
         setTimeout(() => {userPerformance();}, 1000 * (level.offset + Settings.inputOffset));
         }
@@ -634,7 +639,7 @@ function play(){
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillRect(canvas.width / 2 - (Dev.playerWidth * pixPerBeat) / 2, canvas.height - playerHeight - (Dev.playerWidth * pixPerBeat) / 2, (Dev.playerWidth * pixPerBeat), (Dev.playerWidth * pixPerBeat));
 
-        if (document.getElementById("winMenu").hidden){
+        if (document.getElementById("winMenu").hidden && loopAni){
             window.requestAnimationFrame(animate);
         }
         
