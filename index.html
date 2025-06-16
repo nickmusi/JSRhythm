@@ -8,11 +8,11 @@
     <link rel="icon" href="resources/logo.svg">
 </head>
 <body>
-<div name="all" style="
-    display: grid;
+<div name="all" style="display: grid;
+    grid-auto-rows: max-content;
     width: 100vw;
     height: 100vh;">
-    <div hidden id="sheetMusic" position="relative"></div>
+    <div hidden id="sheetMusic" position="relative" style="height: fit-content"></div>
     <div  hidden id="player">
         <canvas id="game" width=1000 height=400></canvas>
         <audio id="audio" hidden controls src=""></audio>

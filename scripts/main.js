@@ -541,6 +541,7 @@ function play(){
             renderAll(level.rthm);
             svg = document.getElementById("sheetMusic").children.item(0);
             svg.setAttribute("width", String(canvas.width));
+            svg.setAttribute("height", "150")
             svg.setAttribute("style", "");
         }
         window.requestAnimationFrame(animate);
@@ -596,7 +597,7 @@ function play(){
 
         if (Settings.sheetMusicMode == "scroll"){
             //svg.setAttribute("style", "left: " + String(-Math.round(position)) + "px;" + " position: relative;");
-            svg.setAttribute("viewBox", String(position) + ", 0, " + (String(canvas.width)) + ", 200");
+            svg.setAttribute("viewBox", String(position) + ", 0, " + (String(canvas.width)) + ", 150");
             //svg.setAttribute("viewBox", "0, 0, 300, 200");
         }
 
