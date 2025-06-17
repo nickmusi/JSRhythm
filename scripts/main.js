@@ -30,7 +30,9 @@ if (JSON.parse(window.localStorage.getItem("records")) != null){
 
 var Dev = {
     playerWidth: 0.2,//These are in beats so it scales with the rest of level
-    restWidth: 0.125
+    restWidth: 0.125,
+    greenError: 0.1,
+    orangeError: 0.2,//All above this will be red
 }
 var colorSet = {
     walls: '#000000',
@@ -366,10 +368,10 @@ function play(){
             error = (audio.currentTime - Settings.inputOffset - level.offset) / secsPerBeat - (rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0));
             clearTimeout(undoLast);
             document.getElementById("showError").innerHTML = Math.round(error * 100) / 100;
-            if (Math.abs(error) < 0.1){
+            if (Math.abs(error) < Dev.greenError){
                 document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(0, 156, 34)";
             }
-            else if (Math.abs(error) < 0.2){
+            else if (Math.abs(error) < Dev.orangeError){
                 document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(255, 141, 11)";
             }
             else{
