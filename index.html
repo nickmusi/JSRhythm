@@ -15,6 +15,7 @@
     <div hidden id="sheetMusic" position="relative" style="height: fit-content"></div>
     <div  hidden id="player">
         <canvas id="game" width=1000 height=400></canvas>
+        <p id="showError" hidden style="text-align: center; font-size: larger;">Error</p>
         <audio id="audio" hidden controls src=""></audio>
     </div>
     <div hidden id="editor">
@@ -62,8 +63,6 @@
     </div>
     <div hidden class="menus" id="pauseMenu">
         <p style="font-size: max(35px, 5vw); margin: 0px;">Paused</p>
-        <div style="width: 100%"></div>
-        <p>Error</p>
         <div style="width: 100%"></div>
         <button name="home" class="menuButton">Home</button>
         <button name="retry" class="menuButton">Retry</button>

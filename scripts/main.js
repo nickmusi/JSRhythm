@@ -343,6 +343,7 @@ function play(){
     }, {signal: globalAbort.signal});
 
     audio.play();
+    var undoLast;
 
     function userPerformance(){
         if (performance == 0){
@@ -363,6 +364,19 @@ function play(){
         }
         else{
             error = (audio.currentTime - Settings.inputOffset - level.offset) / secsPerBeat - (rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0));
+            clearTimeout(undoLast);
+            document.getElementById("showError").innerHTML = Math.round(error * 100) / 100;
+            if (Math.abs(error) < 0.1){
+                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(0, 156, 34)";
+            }
+            else if (Math.abs(error) < 0.2){
+                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(255, 141, 11)";
+            }
+            else{
+                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(233, 30, 30)";
+            }
+            document.getElementById("showError").hidden = false;
+            undoLast = setTimeout(() => {document.getElementById("showError").hidden = true;}, secsPerBeat * 1000)
             avgAccuracy = ((i * avgAccuracy / 100 + (1 - Math.abs(error))) / (i + 1)) * 100;
         }
         
