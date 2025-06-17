@@ -14,6 +14,7 @@
     height: 100vh;">
     <div hidden id="sheetMusic" position="relative" style="height: fit-content"></div>
     <div  hidden id="player">
+        <p id="gameInstructions" hidden>Press Any Key to Play, Escape to Pause</p>
         <canvas id="game" width=1000 height=400></canvas>
         <p id="showError" hidden style="text-align: center; font-size: larger;">Error</p>
         <audio id="audio" hidden controls src=""></audio>
@@ -59,7 +60,9 @@
         <button name="editor" class="menuButton">Editor</button>
         <div style="width: 100%"></div>
         <button class="menuButton">Character</button>
-        <button name="settings" class="menuButton">Settings</button>
+        <button name="settings" class="menuButton">Settings
+            <popover name="settings" hidden id="calInstructions" style="position: absolute;margin-left: 5vw;">&lt;-Calibrate Input Here</popover>
+        </button>
     </div>
     <div hidden class="menus" id="pauseMenu">
         <p style="font-size: max(35px, 5vw); margin: 0px;">Paused</p>

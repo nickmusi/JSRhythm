@@ -19,6 +19,10 @@ if (JSON.parse(window.localStorage.getItem("settings")) != null){
     Settings = JSON.parse(window.localStorage.getItem("settings"));
 }
 
+if (Settings.firstVisit == undefined){
+    Settings.firstVisit = true;
+}
+
 
 var records = {
 
@@ -68,13 +72,22 @@ var colorNext = true;
 function menus(){
     loopAni = false;
     const abort = new AbortController();
+    var cancel;
     inputBool = false;
+    if (Settings.firstVisit){
+        cancel = setInterval(()=>{
+            document.getElementById("calInstructions").hidden = false;
+            setTimeout(() => {document.getElementById("calInstructions").hidden = true;}, 800)
+        }, 1300)
+    }
     document.addEventListener("click", (event) => {inputs(event);}, {signal: abort.signal});
     use = false;
     ignore = false;
     function inputs(event){
         var name = event.target.name;
-
+        if(name != undefined){
+            clearInterval(cancel);
+        }
         if (name == "settings"){
             document.getElementById("settingsMenu").hidden = false;
             document.getElementById("threshold").value = String(Settings.threshold);
@@ -347,7 +360,18 @@ function play(){
     audio.play();
     var undoLast;
 
+    if (Settings.firstVisit){
+        document.getElementById("gameInstructions").style = "position: absolute; margin-top: " + String(Math.round(document.getElementById("game").height / 2)) + "px; margin-left: 25vw"
+        document.getElementById("gameInstructions").hidden = false;
+    }
+
     function userPerformance(){
+        if (Settings.firstVisit){
+            document.getElementById("gameInstructions").hidden = true;
+            document.getElementById("calInstructions").hidden = true;
+            Settings.firstVisit = false;
+            window.localStorage.setItem("settings", JSON.stringify(Settings));
+        }
         if (performance == 0){
             performance = 1;
         }
