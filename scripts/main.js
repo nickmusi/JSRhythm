@@ -9,20 +9,26 @@ var level = {
         "difficulty": "Difficulty",
         "rthm": []
 };
-var Settings = {
+const origSettings = {
     inputOffset: 0.025,
     threshold: 0.3,
-    sheetMusicMode: "scroll"
+    sheetMusicMode: "scroll",
+    animations: "normal"
 }
 
 if (JSON.parse(window.localStorage.getItem("settings")) != null){
-    Settings = JSON.parse(window.localStorage.getItem("settings"));
+    var Settings = JSON.parse(window.localStorage.getItem("settings"));
+}
+else{
+    var Settings = origSettings;
 }
 
-if (Settings.firstVisit == undefined){
-    Settings.firstVisit = true;
-}
 
+for (i in origSettings){
+    if (Settings[String(i)] == undefined){
+        Settings[String(i)] = origSettings[String(i)];
+    }
+}
 
 var records = {
 
@@ -94,6 +100,7 @@ function menus(){
             document.getElementById("threshold").value = String(Settings.threshold);
             document.getElementById("inputOffset").value = String(Settings.inputOffset);
             document.getElementById(String(Settings.sheetMusicMode)).checked = true;
+            document.getElementById(String(Settings.animations)).checked = true;
         }
         if (name == "play"){
             practice = false;
@@ -266,6 +273,7 @@ function menus(){
             Settings.threshold = Number(document.getElementById("threshold").value);
             Settings.inputOffset = Number(document.getElementById("inputOffset").value);
             Settings.sheetMusicMode = document.querySelector('input[name="museMode"]:checked').value;
+            Settings.animations = document.querySelector('input[name="animations"]:checked').value;
             window.localStorage.setItem("settings", JSON.stringify(Settings));
         }
         if (name == "save"){
@@ -389,7 +397,7 @@ function play(){
             performance *= -1;
         }
 
-        if (rhythmArray[i].colors != undefined){
+        if (rhythmArray[i].colors != undefined && Settings.animations != "noFlash"){
             colorSet = rhythmArray[i].colors;//#add time signature change, tempo change code here; add option to not have flashes and option to set personal colors (for vision/making only the sheet music visible)
         }
 

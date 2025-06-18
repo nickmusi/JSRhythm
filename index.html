@@ -119,13 +119,27 @@
         <input type="number" step="any" value="0" id="inputOffset"> <button name="inputCal">Calibrate</button>
         <audio id="calAudio" hidden src="resources/calAudio.mp3"></audio>
         <div style="width: 100%;"></div>
-        Sheet music mode
+        Sheet music mode:
         <div style="width: 100%"></div>
         <input title="Changes to sheet music mode will take effect the next time you start a level" type="radio" checked id="scroll" name="museMode" value="scroll" />
         <label title="Changes to sheet music mode will take effect the next time you start a level" for="scroll">Scroll</label>
 
         <input title="Changes to sheet music mode will take effect the next time you start a level" type="radio" id="line" name="museMode" value="line" />
         <label title="Changes to sheet music mode will take effect the next time you start a level" for="line">Appear</label>
+        <div style="width: 100%;"></div>
+        Animations:
+        <div style="width: 100%"></div>
+        <input type="radio" checked id="normal" name="animations" value="normal" />
+        <label for="normal">Normal</label>
+
+        <input type="radio" id="noFlash" name="animations" value="noFlash" />
+        <label for="noFlash">No Flashing</label>
+
+        <input type="radio" id="noWalls" name="animations" value="noWalls" />
+        <label for="noWalls">No Walls</label>
+
+        <input type="radio" id="none" name="animations" value="none" />
+        <label for="none">None</label>
         <div style="width: 100%;"></div>
         <button name="settingsClose">Close</button>
     </div>
