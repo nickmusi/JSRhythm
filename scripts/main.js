@@ -13,6 +13,7 @@ const origSettings = {
     inputOffset: 0.025,
     threshold: 0.3,
     sheetMusicMode: "scroll",
+    noFlash: false,
     animations: "normal"
 }
 
@@ -99,6 +100,7 @@ function menus(){
             document.getElementById("settingsMenu").hidden = false;
             document.getElementById("threshold").value = String(Settings.threshold);
             document.getElementById("inputOffset").value = String(Settings.inputOffset);
+            document.getElementById("noFlash").checked = Settings.noFlash;
             document.getElementById(String(Settings.sheetMusicMode)).checked = true;
             document.getElementById(String(Settings.animations)).checked = true;
         }
@@ -273,6 +275,7 @@ function menus(){
             Settings.threshold = Number(document.getElementById("threshold").value);
             Settings.inputOffset = Number(document.getElementById("inputOffset").value);
             Settings.sheetMusicMode = document.querySelector('input[name="museMode"]:checked').value;
+            Settings.noFlash = document.getElementById("noFlash").checked;
             Settings.animations = document.querySelector('input[name="animations"]:checked').value;
             window.localStorage.setItem("settings", JSON.stringify(Settings));
         }
@@ -347,8 +350,18 @@ function play(){
     var performance = 0;
 
     var rhythmArray = vexCodetoRhythmArray(level.rthm);
+    colorSet = {...rhythmArray[0].colors};
+    if (Settings.animations == "noWalls"){
+        colorSet.walls = colorSet.path;
+        colorSet.rest = colorSet.path;
+    }
+    if (Settings.animations == "none"){
+        for (t in colorSet){
+            colorSet[t] = '#FFFFFF';
+        }
+    }
+    
 
-    colorSet = rhythmArray[0].colors;
 
     document.getElementById("audio").addEventListener("playing", () => {playEvents();}, {signal: globalAbort.signal});
     document.getElementById("audio").addEventListener("seeking", () => {pauseEvents();}, {signal: globalAbort.signal});
@@ -396,9 +409,12 @@ function play(){
         else {
             performance *= -1;
         }
-
-        if (rhythmArray[i].colors != undefined && Settings.animations != "noFlash"){
-            colorSet = rhythmArray[i].colors;//#add time signature change, tempo change code here; add option to not have flashes and option to set personal colors (for vision/making only the sheet music visible)
+        if (rhythmArray[i].colors != undefined && !Settings.noFlash && Settings.animations != "none"){
+            colorSet = {...rhythmArray[i].colors};//#add time signature change, tempo change code here; add option to not have flashes and option to set personal colors (for vision/making only the sheet music visible)
+            if (Settings.animations == "noWalls"){
+                colorSet.walls = colorSet.path;
+                colorSet.rest = colorSet.path;
+            }
         }
 
         if(Settings.sheetMusicMode == "line"){render(level.rthm, rhythmArray[i].measure);};
@@ -411,13 +427,13 @@ function play(){
             clearTimeout(undoLast);
             document.getElementById("showError").innerHTML = Math.round(error * 100) / 100;
             if (Math.abs(error) < Dev.greenError){
-                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(0, 156, 34)";
+                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(0, 156, 34); position: absolute; width: 100vw; top: " + String(Number(document.getElementById("sheetMusic").children[0].getAttribute("height")) - 36) + "px";
             }
             else if (Math.abs(error) < Dev.orangeError){
-                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(255, 141, 11)";
+                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(255, 141, 11); position: absolute; width: 100vw; top: " + String(Number(document.getElementById("sheetMusic").children[0].getAttribute("height")) - 36) + "px";
             }
             else{
-                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(233, 30, 30)";
+                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(233, 30, 30); position: absolute; width: 100vw; top: " + String(Number(document.getElementById("sheetMusic").children[0].getAttribute("height")) - 36) + "px";
             }
             document.getElementById("showError").hidden = false;
             undoLast = setTimeout(() => {document.getElementById("showError").hidden = true;}, secsPerBeat * 1000)
@@ -490,7 +506,19 @@ function play(){
             document.getElementById("progress").innerHTML = String(Math.round(audio.currentTime / audio.duration * 100)) + "% Progress";
         }
         document.getElementById("error").innerHTML = String(Math.round(error * 100) / 100) + " beats off!";
-        document.getElementById("failMenu").hidden = false;
+
+        if ((Settings.animations == "noWalls" || Settings.animations == "none") && !Settings.noFlash){
+            c = i;
+            while (rhythmArray[c].colors == undefined){
+                c -= 1;
+            }
+            colorSet = {...rhythmArray[c].colors};
+            setTimeout(() => {document.getElementById("failMenu").hidden = false;}, 1000);
+        }
+        else{
+            document.getElementById("failMenu").hidden = false;
+        }
+
         menus();
     }
 
@@ -500,7 +528,17 @@ function play(){
         audio.pause();
         document.getElementById("pracProgress").innerHTML = String(Math.round(audio.currentTime / audio.duration * 100)) + "% Progress";
         document.getElementById("pracError").innerHTML = String(Math.round(error * 100) / 100) + " beats off!";
-        document.getElementById("pracFailMenu").hidden = false;
+        if ((Settings.animations == "noWalls" || Settings.animations == "none") && !Settings.noFlash){
+            c = i;
+            while (rhythmArray[c].colors == undefined){
+                c -= 1;
+            }
+            colorSet = {...rhythmArray[c].colors};
+            setTimeout(() => {document.getElementById("pracFailMenu").hidden = false;}, 1000);
+        }
+        else{
+            document.getElementById("pracFailMenu").hidden = false;
+        }
         menus();
         if (rhythmArray[i].measure < 3){
             document.getElementById("respawn").addEventListener("click", ()=>{
@@ -540,6 +578,15 @@ function play(){
         playerTrailPath = new Path2D();
         playerTrailPath.moveTo(rhythmArray[i - 1].x, rhythmArray[i - 1].y);
         document.getElementById("respawn").addEventListener("click", ()=>{
+            if (Settings.animations == "noWalls"){
+                colorSet.walls = colorSet.path;
+                colorSet.rest = colorSet.path;
+            }
+            if (Settings.animations == "none"){
+                for (t in colorSet){
+                    colorSet[t] = '#FFFFFF';
+                }
+            }
             document.getElementById("pracFailMenu").hidden = true;
             audio.play();
             inputBool = false;
@@ -699,14 +746,7 @@ function play(){
             if (Math.abs(error) <= Settings.threshold){
                 if (multiplier != 0){
                     multiplier = performance;
-            
-                    //if (Math.abs(canvas.height - playerHeight - rhythmArray[i - 2].y) > pixPerBeat * Settings.threshold){
-                        
-                    //}
-                    //else{
-                        playerTrailPath.lineTo(rhythmArray[i-2].x, rhythmArray[i - 2].y);
-                    //}
-                    
+                    playerTrailPath.lineTo(rhythmArray[i-2].x, rhythmArray[i - 2].y);
                     playerHeight = (canvas.height - rhythmArray[i - 2].y) + (performance * ((position + canvas.width / 2) - rhythmArray[i - 2].x));
                 }
                 else{

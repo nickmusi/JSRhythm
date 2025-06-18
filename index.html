@@ -15,8 +15,8 @@
     <div hidden id="sheetMusic" position="relative" style="height: fit-content"></div>
     <div  hidden id="player">
         <p id="gameInstructions" hidden>Press Any Key to Play, Escape to Pause</p>
+        <p id="showError" hidden>Error</p>
         <canvas id="game" width=1000 height=400></canvas>
-        <p id="showError" hidden style="text-align: center; font-size: larger;">Error</p>
         <audio id="audio" hidden controls src=""></audio>
     </div>
     <div hidden id="editor">
@@ -129,11 +129,14 @@
         <div style="width: 100%;"></div>
         Animations:
         <div style="width: 100%"></div>
+        <input type="checkbox" id="noFlash">
+        <label for="noFlash">No Flashing</label>
+        <div style="width: 100%"></div>
+
         <input type="radio" checked id="normal" name="animations" value="normal" />
         <label for="normal">Normal</label>
 
-        <input type="radio" id="noFlash" name="animations" value="noFlash" />
-        <label for="noFlash">No Flashing</label>
+        
 
         <input type="radio" id="noWalls" name="animations" value="noWalls" />
         <label for="noWalls">No Walls</label>
