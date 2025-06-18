@@ -51,6 +51,7 @@ var globalAbort = new AbortController();
 var inputBool = true;
 
 var loopAni = false;
+var practice = false;
 
 var raNote = {
     duration: 0,
@@ -95,7 +96,13 @@ function menus(){
             document.getElementById(String(Settings.sheetMusicMode)).checked = true;
         }
         if (name == "play"){
-
+            practice = false;
+            selector();
+            abort.abort();
+            event.target.parentElement.hidden = true;
+        }
+        if (name == "practice"){
+            practice = true;
             selector();
             abort.abort();
             event.target.parentElement.hidden = true;
@@ -114,6 +121,9 @@ function menus(){
             abort.abort();
             play();
             event.target.parentElement.hidden = true;
+        }
+        if (name == "respawn"){
+            abort.abort();
         }
         if (name == "home"){
             abort.abort();
@@ -135,8 +145,8 @@ function menus(){
 
             
             for (z in document.getElementById("selector").children){
-                if (document.getElementById("selector").children[z].innerHTML == level.title){
-                    loadLevel(String(document.getElementById("selector").children[z].nextElementSibling.id))
+                if (document.getElementById("selector").children[z].children[0].innerHTML == level.title){
+                    loadLevel(String(document.getElementById("selector").children[z].nextElementSibling.children[0].id))
                 }
             }
         };
@@ -408,7 +418,8 @@ function play(){
         
         
         if (Math.abs(error) > Settings.threshold){
-            fail();
+            if (!practice){fail();}
+            else{pracFail();}
         }
         else{
             i++;
@@ -429,7 +440,8 @@ function play(){
             else{
                 time = 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
             }
-            failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
+            failTimeID = setTimeout(() => {error = Settings.threshold; if (!practice){fail();}
+            else{pracFail();}}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
         }
         else{
             win();
@@ -439,7 +451,7 @@ function play(){
     function win(){
         clearTimeout(failTimeID);
         document.getElementById("avgAccuracy").innerHTML = "Average Accuracy: " + String(Math.round(avgAccuracy)) + "%";
-        if (records[level.title] == undefined){
+        if (!practice){if (records[level.title] == undefined){
             records[level.title] = {progress: "Done", accuracy: avgAccuracy};
         }
         else if (records[level.title].accuracy != undefined){
@@ -447,7 +459,7 @@ function play(){
         }
         else{
             records[level.title] = {progress: "Done", accuracy: avgAccuracy};
-        }
+        }}
         window.localStorage.setItem("records", JSON.stringify(records));
         
         setTimeout(() => {
@@ -474,6 +486,70 @@ function play(){
         menus();
     }
 
+    function pracFail(){
+        var newAbort = new AbortController();
+        clearTimeout(failTimeID);
+        audio.pause();
+        document.getElementById("pracProgress").innerHTML = String(Math.round(audio.currentTime / audio.duration * 100)) + "% Progress";
+        document.getElementById("pracError").innerHTML = String(Math.round(error * 100) / 100) + " beats off!";
+        document.getElementById("pracFailMenu").hidden = false;
+        menus();
+        if (rhythmArray[i].measure < 3){
+            document.getElementById("respawn").addEventListener("click", ()=>{
+                globalAbort.abort();
+                globalAbort = new AbortController();
+                document.getElementById("pracFailMenu").hidden = true;
+                newAbort.abort();
+                setTimeout(play, 1);
+               }, {signal: newAbort.signal}); 
+            return;
+        }
+        i -= 1;
+        prevMeasure = rhythmArray[i].measure;
+        while (rhythmArray[i].measure == prevMeasure){
+            i -= 1;
+        }
+        prevMeasure = rhythmArray[i].measure;
+        while (rhythmArray[i].measure == prevMeasure){
+            i -= 1;
+        }
+        i = Math.max(i + 1, 0);
+        audio.currentTime = rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) * secsPerBeat + level.offset;
+        prevTime = audio.currentTime;
+        if (i % 2 == 1){
+            performance = -1;
+            multiplier = -1;
+        }
+        else{
+            performance = 1;
+            multiplier = 1;
+        }
+        if (i == 0){
+            performance = 0;
+            multiplier = 0;
+        }
+        playerHeight = canvas.height - rhythmArray[i - 1].y - performance * Settings.inputOffset * pixPerSec;
+        playerTrailPath = new Path2D();
+        playerTrailPath.moveTo(rhythmArray[i - 1].x, rhythmArray[i - 1].y);
+        document.getElementById("respawn").addEventListener("click", ()=>{
+            document.getElementById("pracFailMenu").hidden = true;
+            audio.play();
+            inputBool = false;
+            i += 1;
+            z = i;
+            prevMeasure = rhythmArray[z].measure;
+            while (rhythmArray[z].measure == prevMeasure){
+                if (!rhythmArray[z].rest){
+                    setTimeout(() => {userPerformance();}, 1000 * (secsPerBeat * rhythmArray.slice(0, z).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset - Settings.inputOffset)));
+                }
+                z++;
+            }
+            setTimeout(() => {inputBool = true;}, 1000 * (secsPerBeat * rhythmArray.slice(0, z).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset - Settings.inputOffset) - Settings.threshold));
+            
+            newAbort.abort();
+        }, {signal: newAbort.signal});
+    }
+
     function calculatePosition(){//#add practice mode, checkpoints, etc.
         var it = 0;
         while (rhythmArray.slice(0, it).reduce((prev, current,) => prev + current.duration, 0) < ((document.getElementById("audio").currentTime - level.offset) / secsPerBeat)){
@@ -497,11 +573,13 @@ function play(){
 
         time = 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
 
-        failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));      
+        failTimeID = setTimeout(() => {error = Settings.threshold; if (!practice){fail();}
+            else{pracFail();}}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));      
 
         time = 1000 * (secsPerBeat * rhythmArray.slice(0, i + 1).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + Settings.threshold * millisPerBeat;
         clearTimeout(failTimeID);
-        failTimeID = setTimeout(() => {error = Settings.threshold; fail();}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
+        failTimeID = setTimeout(() => {error = Settings.threshold; if (!practice){fail();}
+            else{pracFail();}}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
         if(Settings.sheetMusicMode == "line"){render(level.rthm, rhythmArray[i].measure);}
     }
     function pauseEvents(){
@@ -621,7 +699,7 @@ function play(){
                         playerTrailPath.lineTo(rhythmArray[i-2].x, rhythmArray[i - 2].y);
                     //}
                     
-                    playerHeight = playerHeight + performance * 2 * ((position + canvas.width / 2) - rhythmArray[i - 2].x);                       
+                    playerHeight = playerHeight + performance * 2 * ((position + canvas.width / 2) - rhythmArray[i - 2].x);   //#accessing the y here would make it easier to stay on track if it ever got off, but would also make it harder if the error created a transition to the top or bottom                    
                 }
                 else{
                     multiplier = performance;
@@ -1044,14 +1122,16 @@ function selector(){
                 for (i in items){
                     div = main.appendChild(document.createElement("div"));
                     l = div.appendChild(document.createElement("button"));
-                    m = div.appendChild(document.createElement("p"));
-                    m.innerHTML = "Progress: ";
-                    if (records[String(i)] != undefined){
-                        if (records[String(i)].progress == "Done"){
-                            m.innerHTML = "Accuracy: " + String(Math.round(records[String(i)].accuracy)) + "%"
-                        }
-                        else{
-                            m.innerHTML = "Progress: " + String(Math.round(records[String(i)].progress)) + "%";//#level.title must match the name in list.json... maybe make one big levels object to make accesssing these easier?
+                    if (!practice){
+                        m = div.appendChild(document.createElement("p"));
+                        m.innerHTML = "Progress: ";
+                        if (records[String(i)] != undefined){
+                            if (records[String(i)].progress == "Done"){
+                                m.innerHTML = "Accuracy: " + String(Math.round(records[String(i)].accuracy)) + "%"
+                            }
+                            else{
+                                m.innerHTML = "Progress: " + String(Math.round(records[String(i)].progress)) + "%";//#level.title must match the name in list.json... maybe make one big levels object to make accesssing these easier?
+                            }
                         }
                     }
                     l.innerHTML = String(i)

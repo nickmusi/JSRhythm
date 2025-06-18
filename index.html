@@ -59,7 +59,7 @@
         <button name="play" class="menuButton">Play</button>
         <button name="editor" class="menuButton">Editor</button>
         <div style="width: 100%"></div>
-        <button class="menuButton">Character</button>
+        <button name="practice" class="menuButton">Practice</button>
         <button name="settings" class="menuButton">Settings
             <popover name="settings" hidden id="calInstructions" style="position: absolute;margin-left: 5vw;">&lt;-Calibrate Input Here</popover>
         </button>
@@ -82,6 +82,17 @@
         <div style="width: 100%"></div>
         <button name="home" class="menuButton">Home</button>
         <button name="retry" class="menuButton">Retry</button>
+        <button name="settings" name="settings" class="menuButton">Settings</button>
+    </div>
+    <div hidden class="menus" id="pracFailMenu">
+        <p style="font-size: max(35px, 5vw); margin: 0px;">Game Over!</p>
+        <div style="width: 100%"></div>
+        <p id="pracError">Error</p>
+        <div style="width: 100%"></div>
+        <p id="pracProgress">Progress</p>
+        <div style="width: 100%"></div>
+        <button name="home" class="menuButton">Home</button>
+        <button id="respawn" name="respawn" class="menuButton">Respawn</button>
         <button name="settings" name="settings" class="menuButton">Settings</button>
     </div>
     <div hidden class="menus" id="winMenu">
