@@ -699,7 +699,7 @@ function play(){
                         playerTrailPath.lineTo(rhythmArray[i-2].x, rhythmArray[i - 2].y);
                     //}
                     
-                    playerHeight = playerHeight + performance * 2 * ((position + canvas.width / 2) - rhythmArray[i - 2].x);   //#accessing the y here would make it easier to stay on track if it ever got off, but would also make it harder if the error created a transition to the top or bottom                    
+                    playerHeight = (canvas.height - rhythmArray[i - 2].y) + (performance * ((position + canvas.width / 2) - rhythmArray[i - 2].x));
                 }
                 else{
                     multiplier = performance;
@@ -739,7 +739,7 @@ function play(){
         ctx.stroke(rendered);
 
         
-        if (playerHeight > canvas.height){
+        if (playerHeight > canvas.height){//#change logic here to check if the direction (performance) matches the direction that teleporting would end up placing you
             if (((Math.abs(canvas.height - playerHeight - rhythmArray[i - 1].y) > 2 * Settings.threshold * pixPerBeat) || rhythmArray[i - 2].x - (position + canvas.width / 2) > 2 * pixPerBeat * (Settings.threshold))){
                 playerTrailPath.lineTo(position + canvas.width / 2, canvas.height - playerHeight);
                 playerHeight = playerHeight - canvas.height;
