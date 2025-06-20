@@ -277,7 +277,6 @@ function menus(){
             Settings.threshold = Number(document.getElementById("threshold").value);
             Settings.inputOffset = Number(document.getElementById("inputOffset").value);
             Settings.sheetMusicMode = document.querySelector('input[name="museMode"]:checked').value;
-            console.log(document.querySelector('input[name="museMode"]:checked').value)
             Settings.noFlash = document.getElementById("noFlash").checked;
             Settings.animations = document.querySelector('input[name="animations"]:checked').value;
             window.localStorage.setItem("settings", JSON.stringify(Settings));
@@ -444,14 +443,27 @@ function play(){
             error = (audio.currentTime - Settings.inputOffset - level.offset) / secsPerBeat - (rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0));
             clearTimeout(undoLast);
             document.getElementById("showError").innerHTML = Math.round(error * 100) / 100;
+            document.getElementById("showError").style = "font-size: larger; width: 20vw; left: 50%; right: 50%; position: absolute; top: " + String(Number(document.getElementById("sheetMusic").children[0].getAttribute("height")) - 36) + "px";
             if (Math.abs(error) < Dev.greenError){
-                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(0, 156, 34); position: absolute; width: 100vw; top: " + String(Number(document.getElementById("sheetMusic").children[0].getAttribute("height")) - 36) + "px";
+                document.getElementById("showError").style.color = "rgb(0, 156, 34)";
             }
             else if (Math.abs(error) < Dev.orangeError){
-                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(255, 141, 11); position: absolute; width: 100vw; top: " + String(Number(document.getElementById("sheetMusic").children[0].getAttribute("height")) - 36) + "px";
+                document.getElementById("showError").style.color = "rgb(255, 141, 11)";
             }
             else{
-                document.getElementById("showError").style = "text-align: center; font-size: larger; color: rgb(233, 30, 30); position: absolute; width: 100vw; top: " + String(Number(document.getElementById("sheetMusic").children[0].getAttribute("height")) - 36) + "px";
+                document.getElementById("showError").color = "rgb(233, 30, 30)";
+            }
+            if (error > 0){
+                document.getElementById("showError").style.left = "51%";
+                document.getElementById("showError").style.right = "49%";
+            }
+            else if (error < 0){
+                document.getElementById("showError").style.right = "52%";
+                document.getElementById("showError").style.left = "48%";
+            }
+            else{
+                document.getElementById("showError").style.left = "50%";
+                document.getElementById("showError").style.right = "50%";
             }
             document.getElementById("showError").hidden = false;
             undoLast = setTimeout(() => {document.getElementById("showError").hidden = true;}, secsPerBeat * 1000)
