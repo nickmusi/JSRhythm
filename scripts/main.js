@@ -277,6 +277,7 @@ function menus(){
             Settings.threshold = Number(document.getElementById("threshold").value);
             Settings.inputOffset = Number(document.getElementById("inputOffset").value);
             Settings.sheetMusicMode = document.querySelector('input[name="museMode"]:checked').value;
+            console.log(document.querySelector('input[name="museMode"]:checked').value)
             Settings.noFlash = document.getElementById("noFlash").checked;
             Settings.animations = document.querySelector('input[name="animations"]:checked').value;
             window.localStorage.setItem("settings", JSON.stringify(Settings));
@@ -336,7 +337,6 @@ menus();
 function play(){
     loopAni = true;
     calcCanvSize();
-    Settings.sheetMusicMode = document.querySelector('input[name="museMode"]:checked').value;
     document.getElementById("player").hidden = false;
     document.getElementById("sheetMusic").hidden = false;
     var failTimeID;
@@ -429,7 +429,14 @@ function play(){
             }
         }
 
-        if(Settings.sheetMusicMode == "line"){render(level.rthm, rhythmArray[i].measure);};
+        if(Settings.sheetMusicMode == "line"){
+            render(level.rthm, rhythmArray[i].measure);
+            svg = document.getElementById("sheetMusic").children.item(0);
+            svg.setAttribute("viewBox", "200, 0, 400, 150");
+            svg.setAttribute("width", String(canvas.width));
+            svg.setAttribute("height", "150")
+            svg.setAttribute("style", "");
+        };
 
         if (rhythmArray[i].rest){
             error = 0;
@@ -659,7 +666,14 @@ function play(){
         clearTimeout(failTimeID);
         failTimeID = setTimeout(() => {error = Settings.threshold; if (!practice){fail();}
             else{pracFail();}}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
-        if(Settings.sheetMusicMode == "line"){render(level.rthm, rhythmArray[i].measure);}
+        if(Settings.sheetMusicMode == "line"){
+            render(level.rthm, rhythmArray[i].measure);
+            svg = document.getElementById("sheetMusic").children.item(0);
+            svg.setAttribute("viewBox", "200, 0, 400, 150");
+            svg.setAttribute("width", String(canvas.width));
+            svg.setAttribute("height", "150")
+            svg.setAttribute("style", "");
+        }
     }
 
     function pauseEvents(){
