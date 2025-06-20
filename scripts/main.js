@@ -14,7 +14,8 @@ const origSettings = {
     threshold: 0.3,
     sheetMusicMode: "scroll",
     noFlash: false,
-    animations: "normal"
+    animations: "normal",
+    firstVisit: true
 }
 
 if (JSON.parse(window.localStorage.getItem("settings")) != null){
@@ -475,15 +476,17 @@ function play(){
     function win(){
         clearTimeout(failTimeID);
         document.getElementById("avgAccuracy").innerHTML = "Average Accuracy: " + String(Math.round(avgAccuracy)) + "%";
-        if (!practice){if (records[level.title] == undefined){
-            records[level.title] = {progress: "Done", accuracy: avgAccuracy};
-        }
-        else if (records[level.title].accuracy != undefined){
-            records[level.title] = {progress: "Done", accuracy: Math.max(avgAccuracy, records[level.title].accuracy)};
-        }
-        else{
-            records[level.title] = {progress: "Done", accuracy: avgAccuracy};
-        }}
+        if (!practice){
+            if (records[level.title] == undefined){
+                records[level.title] = {progress: "Done", accuracy: avgAccuracy};
+            }
+            else if (records[level.title].accuracy != undefined){
+                records[level.title] = {progress: "Done", accuracy: Math.max(avgAccuracy, records[level.title].accuracy)};
+            }
+            else{
+                records[level.title] = {progress: "Done", accuracy: avgAccuracy};
+            }
+    }
         window.localStorage.setItem("records", JSON.stringify(records));
         
         setTimeout(() => {
@@ -540,7 +543,7 @@ function play(){
             document.getElementById("pracFailMenu").hidden = false;
         }
         menus();
-        if (rhythmArray[i].measure < 3){
+        if (rhythmArray[i].measure < 2){
             document.getElementById("respawn").addEventListener("click", ()=>{
                 globalAbort.abort();
                 globalAbort = new AbortController();
