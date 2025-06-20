@@ -45,6 +45,7 @@ var Dev = {
     restWidth: 0.125,
     greenError: 0.1,
     orangeError: 0.2,//All above this will be red
+    numCountDown: 4
 }
 var colorSet = {
     walls: '#000000',
@@ -389,7 +390,17 @@ function play(){
         }
     }, {signal: globalAbort.signal});
 
-    audio.play();
+    document.getElementById("countdown").style = "position: absolute; margin-left: 25vw; font-size: xx-large;"
+    for (countVar = Dev.numCountDown; level.offset + Settings.inputOffset < countVar * secsPerBeat; countVar -= 1){
+        document.getElementById("countdown").hidden = false;
+        setTimeout((val) => {document.getElementById("countdown").innerHTML = String(val)}, ((Dev.numCountDown - countVar) * secsPerBeat + Settings.inputOffset) * 1000, countVar);//endingcountVarfreezes the value of it right theree and assigns it to val
+    }
+    if(level.offset < Dev.numCountDown * secsPerBeat){
+        setTimeout(() => {audio.play();}, (Dev.numCountDown * secsPerBeat - level.offset) * 1000);
+    }
+    else{
+        audio.play();
+    }
     var undoLast;
 
     if (Settings.firstVisit){
@@ -625,8 +636,18 @@ function play(){
     function playEvents(){
         loopAni = true;
         window.requestAnimationFrame(animate);
-        if (rhythmArray[0].rest && i == 0){
-        setTimeout(() => {userPerformance();}, 1000 * (level.offset + Settings.inputOffset));
+        if (i == 0){//#if respawn on measure beginning with rest, this will fail. Maybe replace [0] with [i]
+
+            while (countVar > 0){
+                setTimeout((val)=> {document.getElementById("countdown").innerHTML = String(val); document.getElementById("countdown").hidden = false;}, (level.offset + Settings.inputOffset - countVar * secsPerBeat) * 1000, countVar);
+                countVar -= 1;
+            }
+            setTimeout(()=> {document.getElementById("countdown").hidden = true}, (level.offset + Settings.inputOffset) * 1000);
+
+            if (rhythmArray[0].rest){
+                setTimeout(() => {userPerformance();}, 1000 * (level.offset + Settings.inputOffset));
+            }
+        
         }
 
         time = 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
@@ -640,6 +661,7 @@ function play(){
             else{pracFail();}}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
         if(Settings.sheetMusicMode == "line"){render(level.rthm, rhythmArray[i].measure);}
     }
+
     function pauseEvents(){
         clearTimeout(failTimeID);
     }
