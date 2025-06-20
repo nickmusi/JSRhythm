@@ -392,8 +392,7 @@ function play(){
 
     document.getElementById("countdown").style = "position: absolute; margin-left: 25vw; font-size: xx-large;"
     for (countVar = Dev.numCountDown; level.offset + Settings.inputOffset < countVar * secsPerBeat; countVar -= 1){
-        document.getElementById("countdown").hidden = false;
-        setTimeout((val) => {document.getElementById("countdown").innerHTML = String(val)}, ((Dev.numCountDown - countVar) * secsPerBeat + Settings.inputOffset) * 1000, countVar);//endingcountVarfreezes the value of it right theree and assigns it to val
+        setTimeout((val) => {document.getElementById("countdown").innerHTML = String(val); document.getElementById("countdown").hidden = false;}, ((Dev.numCountDown - countVar) * secsPerBeat + Settings.inputOffset) * 1000, countVar);//endingcountVarfreezes the value of it right theree and assigns it to val
     }
     if(level.offset < Dev.numCountDown * secsPerBeat){
         setTimeout(() => {audio.play();}, (Dev.numCountDown * secsPerBeat - level.offset) * 1000);
