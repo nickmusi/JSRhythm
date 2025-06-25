@@ -1039,12 +1039,34 @@ function editor(){//#need to add beam support
             }
             measure = Number(document.getElementById("measure").value);
 
+            for (g in level.rthm[measure].beam){//#need to find latest instance of beam and index that here
+                document.getElementById("beam" + String(g)).value = level.rthm[measure].beam[g];
+                document.getElementById("beam" + String(g)).click();
+            }
+
             if (id != "delete"){
                 level.rthm.splice(measure, 0, {notes: "[].concat("});
                 endParen = ")";
             }
         }
-
+        if (id.replaceAll(/\d/g, "") == "beam"){
+            for (b = 0; document.getElementById("beam" + String(b)) != null; b++){}
+            if (document.getElementById("beam" + String(b - 2)).value != "" && document.getElementById("beam" + String(b - 2)).value != "0"){//adds elements as needed
+                document.getElementById("beam" + String(b - 2)).insertAdjacentHTML("afterend", "<input name=\"beam\" class=\"beamNumber\" id=\"beam" + String(b) + "\" type=\"number\">")
+                document.getElementById("beam" + String(b - 1)).insertAdjacentHTML("afterend", "<input name=\"beam\" class=\"beamNumber\" id=\"beam" + String(b + 1) + "\" type=\"number\" value=\"8\">")
+            }
+            else{
+                while (document.getElementById("beam" + String(b - 4)).value == "" || document.getElementById("beam" + String(b - 4)).value == "0"){//removes unneeded elements
+                    document.getElementById("beam" + String(b - 2)).remove();
+                    document.getElementById("beam" + String(b - 1)).remove();
+                    b -= 2;
+                }
+            }
+            level.rthm[measure].beam = [];
+            for (b = 0; document.getElementById("beam" + String(b + 2)) != null; b++){
+                level.rthm[measure].beam[b] = Number(document.getElementById("beam" + String(b)).value);
+            }
+        }
         if (id == "1"){
             if (document.getElementById("rest0").checked){
                 level.rthm[measure].notes =level.rthm[measure].notes.concat("score.notes('D5/1/r'), ")
