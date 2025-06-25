@@ -1,4 +1,5 @@
 var vf = new Vex.Flow.Factory({renderer: {elementId: "sheetMusic", width: 1000, height: 200}});
+var beamArray = [];
 var score = vf.EasyScore();
 var x = 0;
 var y = 0;
@@ -10,38 +11,14 @@ function newStave(width){
 }
 
 
-function newMeasure(vexCode = "", width = 200, options = {time: "-1", key: "-1", clef: "-1"}){
+function newMeasure(vexCode = "", width = 200, options = {time: "-1", key: "-1", clef: "-1", beam: []}){
   var stave = newStave(width);
   var ties = [0];
   var tiecount = 0;
   if (vexCode.indexOf("(newMeasure") != -1){
     vexCode = vexCode.slice(0, vexCode.indexOf("(newMeasure") - 7);
   }
-  /*var remain = eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([vexCode]).reduce((prev, current) => prev + current.duration, 0);//this isn't doing anything#
-  /*if (remain == 0){
-    vexCode = "(" + vexCode
-  }
-  if (Math.floor(remain / 4) > 0){
-      vexCode += "score.notes('B4/1/r'),";
-      remain += -4;
-  }
-  if (Math.floor(remain / 2) > 0){
-      vexCode += "score.notes('B4/2/r'),";
-      remain += -2;
-  }
-  if (Math.floor(remain / 1) > 0){
-      vexCode += "score.notes('B4/4/r'),";
-      remain += -1;
-  }
-  if (Math.floor(remain / 0.5) > 0){
-      vexCode += "score.notes('B4/8/r'),";
-      remain += -0.5;
-  }
-  if (Math.floor(remain / 0.25) > 0){
-      vexCode += "score.notes('B4/16/r'),";
-      remain += -0.25;
-  }*/
-  //vexCode += ")";//I know this isn't doing anything
+
   vexCode = eval(testCode(vexCode));
   var voice = score.voice(vexCode);
   if (options.time != undefined && options.time != "-1"){
@@ -54,7 +31,16 @@ function newMeasure(vexCode = "", width = 200, options = {time: "-1", key: "-1",
     stave.addKeySignature(options.key);
   }
 
-  var beams = Vex.Flow.Beam.applyAndGetBeams(voice);
+  putBeam = undefined
+  if (options.beam != undefined){
+    putBeam = [];
+    for (b = 0; 2 * b < options.beam.length; b++){
+        putBeam.push(new Vex.Flow.Fraction(options.beam[2 * b], options.beam[2 * b + 1]));
+    }
+  }
+
+
+  var beams = Vex.Flow.Beam.applyAndGetBeams(voice, -1, putBeam);//#make the level.rthm an array of objects, with one item being a string and the other being options per measure, the 1st, 2nd, and 3rd elements of the array have per-measure info
   vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
   vf.draw();
@@ -76,25 +62,24 @@ function newMeasure(vexCode = "", width = 200, options = {time: "-1", key: "-1",
   }
 }
 
-function render(measures = [], position = 0){
+function render(measures = [], position = 0, number = 4){//number is number of measures to render
   document.getElementById("sheetMusic").innerHTML = "";
   vf = new Vex.Flow.Factory({renderer: {elementId: "sheetMusic", width: 1000, height: 200}});
   score = vf.EasyScore();
   score.set({ time: level.time });
   x = 0;
-  var a = Math.min(Math.floor((2 + position) / 4) * 4);
-  var b = Math.min(1 + Math.floor((1 + position) / 4) * 4);
-  var c = Math.min(2 + Math.floor((position) / 4) * 4);
-  var d = Math.min(3 + Math.max(Math.floor((-1 + position) / 4) * 4, 0));
-  newMeasure(measures[a], 250, {time: level.time, clef: "percussion"});
-  if (measures[b] != undefined){
-    newMeasure(measures[b], 250);
-  }
-  if (measures[c] != undefined){
-    newMeasure(measures[c], 250);
-  }
-  if (measures[d] != undefined){
-    newMeasure(measures[d], 250);
+  for (m = 0; m < number; m++){
+    var a = m + Math.max(Math.floor(((number / 2 - m) + position) / number) * number, 0)
+    beamA = a
+    while (measures[beamA].beam == undefined && beamA > 0){
+      beamA -= 1;
+    }
+    if (m == 0){
+      newMeasure(measures[a].notes, 250, {time: level.time, clef: "percussion", beam: measures[beamA].beam});
+    }
+    else{
+      newMeasure(measures[a].notes, 250, {beam: measures[beamA].beam});
+    }
   }
 }
 
@@ -105,34 +90,41 @@ function renderAll(measures = []){
   score.set({ time: level.time });
   x = 0;
   for (i in measures){
+    beamI = i
+    while (measures[beamI].beam == undefined && beamI > 0){
+      beamI -= 1;
+    }
     if (i == 0){
-      newMeasure(measures[i], pixPerBeat * eval(level.time) * 4, {time: level.time, clef: "percussion"});
+      newMeasure(measures[i].notes, pixPerBeat * eval(level.time) * 4, {time: level.time, clef: "percussion", beam: measures[beamI].beam});
     }
     else{
-      newMeasure(measures[i], pixPerBeat * eval(level.time) * 4);
+      newMeasure(measures[i].notes, pixPerBeat * eval(level.time) * 4, {beam: measures[beamI].beam});
     }
   }
   
 }
 
-function editRender(measures = [], position = 0){
+function editRender(measures = [], position = 0, number = 4){
   document.getElementById("sheetMusic").innerHTML = "";
   vf = new Vex.Flow.Factory({renderer: {elementId: "sheetMusic", width: 1000, height: 200}});
   score = vf.EasyScore();
   score.set({ time: level.time });
   x = 0;
 
-  if ((measures[Math.max(position - 3, 0)] != undefined) && (measures[Math.max(position - 2, 1)] != "[].concat(")){
-    newMeasure(measures[Math.max(position - 3, 0)], 250, {time: level.time, clef: "percussion"});
-  }
-  if ((measures[Math.max(position - 2, 1)] != undefined) && (measures[Math.max(position - 2, 1)] != "[].concat(")){
-    newMeasure(measures[Math.max(position - 2, 1)], 250);
-  }
-  if ((measures[Math.max(position - 1, 2)] != undefined) && (measures[Math.max(position - 1, 2)] != "[].concat(")){
-    newMeasure(measures[Math.max(position - 1, 2)], 250);
-  }
-  if ((measures[Math.max(position, 3)] != undefined) && (measures[Math.max(position, 3)] != "[].concat(")){
-    newMeasure(measures[Math.max(position, 3)], 250);
+  for (m = 0; m < number; m++){
+    var a = Math.max(position - 3 + m, m);
+    if (measures[a] != undefined && measures[a].notes != "[].concat("){  
+      beamA = a
+      while (measures[beamA].beam == undefined && beamA > 0){
+        beamA -= 1;
+      }
+      if (m == 0){
+        newMeasure(measures[a].notes, 250, {time: level.time, clef: "percussion", beam: measures[beamA].beam});
+      }
+      else{
+        newMeasure(measures[a].notes, 250, {beam: measures[beamA].beam});
+      }
+    }
   }
 }
 //https://www.vexflow.com/build/docs/tuplet.html

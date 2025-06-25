@@ -283,7 +283,7 @@ function menus(){
         }
         if (name == "save"){
             for (i in level.rthm){
-                if (level.rthm[i] == "[].concat("){
+                if (level.rthm[i].notes == "[].concat("){
                     level.rthm.splice(i, 1);
                 }
             }
@@ -298,7 +298,7 @@ function menus(){
         }
         if (name == "testLevel"){
             for (i in level.rthm){
-                if (level.rthm[i] == "[].concat("){
+                if (level.rthm[i].notes == "[].concat("){
                     level.rthm.splice(i, 1);
                 }
             }
@@ -868,7 +868,7 @@ function vexCodetoRhythmArray(vexCodeArray = []){//#make beaming automatic on tu
     //Vexcode notes must use numbers, not letters for duration and declare length for each note
     for (i in vexCodeArray){
         if (vexCodeArray[i] != undefined){
-            vexCode = testCode(vexCodeArray[i]).replaceAll("score.notes", "vNotes");
+            vexCode = testCode(vexCodeArray[i].notes).replaceAll("score.notes", "vNotes");
             vexCode = vexCode.replaceAll("tie", "vTie");
             vexCode = vexCode.replaceAll("score.tuplet", "vTuplet");
             vexCode = vexCode.replaceAll("score.beam", "");
@@ -1033,31 +1033,6 @@ function editor(){//#need to add beam support
     function inputs(event){
         var id = event.srcElement.id;
         if (measure != Number(document.getElementById("measure").value)){
-
-            /*if (measure >= 0 ){
-                var remain = eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0);
-                if (Math.floor(remain / 4) > 0){
-                    level.rthm[measure] += "score.notes('B4/1/r'),";
-                    remain += -4;//#this fills end of measures with rests. Maybe do this on render to avoid errors?
-                }
-                if (Math.floor(remain / 2) > 0){
-                    level.rthm[measure] += "score.notes('B4/2/r'),";
-                    remain += -2;
-                }
-                if (Math.floor(remain / 1) > 0){
-                    level.rthm[measure] += "score.notes('B4/4/r'),";
-                    remain += -1;
-                }
-                if (Math.floor(remain / 0.5) > 0){
-                    level.rthm[measure] += "score.notes('B4/8/r'),";
-                    remain += -0.5;
-                }
-                if (Math.floor(remain / 0.25) > 0){
-                    level.rthm[measure] += "score.notes('B4/16/r'),";
-                    remain += -0.25;
-                }
-                level.rthm[measure] += endParen;
-            }*/
             
             if (document.getElementById("measure").value == String(-100)){
                 document.getElementById("measure").value = String(0);
@@ -1065,69 +1040,69 @@ function editor(){//#need to add beam support
             measure = Number(document.getElementById("measure").value);
 
             if (id != "delete"){
-                level.rthm.splice(measure, 0, "[].concat(");
+                level.rthm.splice(measure, 0, {notes: "[].concat("});
                 endParen = ")";
             }
         }
 
         if (id == "1"){
             if (document.getElementById("rest0").checked){
-                level.rthm[measure] =level.rthm[measure].concat("score.notes('D5/1/r'), ")
+                level.rthm[measure].notes =level.rthm[measure].notes.concat("score.notes('D5/1/r'), ")
             }
             else{
-               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/1'), ")
+               level.rthm[measure].notes = level.rthm[measure].notes.concat("score.notes('B4/1'), ")
             }
         }
         if (id == "2"){
             if (document.getElementById("rest0").checked){
-               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/2/r'), ");
+               level.rthm[measure].notes =level.rthm[measure].notes.concat("score.notes('B4/2/r'), ");
             }
             else{
-               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/2'), ");
+               level.rthm[measure].notes =level.rthm[measure].notes.concat("score.notes('B4/2'), ");
             }
         }
         if (id == "4"){
             if (document.getElementById("rest0").checked){
-               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/4/r'), ");
+               level.rthm[measure].notes =level.rthm[measure].notes.concat("score.notes('B4/4/r'), ");
             }
             else{
-               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/4'), ");
+               level.rthm[measure].notes =level.rthm[measure].notes.concat("score.notes('B4/4'), ");
             }
         }
         if (id == "8"){
             if (document.getElementById("rest0").checked){
-               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/8/r'), ");
+               level.rthm[measure].notes =level.rthm[measure].notes.concat("score.notes('B4/8/r'), ");
             }
             else{
-               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/8'), ");
+               level.rthm[measure].notes =level.rthm[measure].notes.concat("score.notes('B4/8'), ");
             }
         }
         if (id == "16"){
             if (document.getElementById("rest0").checked){
-               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/16/r'), ");
+               level.rthm[measure].notes =level.rthm[measure].notes.concat("score.notes('B4/16/r'), ");
             }
             else{
-               level.rthm[measure] =level.rthm[measure].concat("score.notes('B4/16'), ");
+               level.rthm[measure].notes =level.rthm[measure].notes.concat("score.notes('B4/16'), ");
             }
         }
         if (colorNext && (String(id.match(/\d+/g)) == id)){
-            level.rthm[measure] = level.rthm[measure].slice(0, level.rthm[measure].lastIndexOf("'") + 1) +", " + JSON.stringify(colorSet).replaceAll("\"", "'").replaceAll(RegExp(/'(?!#|,|})/g), "") + level.rthm[measure].slice(level.rthm[measure].lastIndexOf("'") + 1)
+            level.rthm[measure].notes = level.rthm[measure].notes.slice(0, level.rthm[measure].notes.lastIndexOf("'") + 1) +", " + JSON.stringify(colorSet).replaceAll("\"", "'").replaceAll(RegExp(/'(?!#|,|})/g), "") + level.rthm[measure].notes.slice(level.rthm[measure].notes.lastIndexOf("'") + 1)
             colorNext = false;
         }
         if (id == "tie"){
-            var tieHere =level.rthm[measure].lastIndexOf("score.notes");
-            if (level.rthm[measure] == "[].concat("){
+            var tieHere =level.rthm[measure].notes.lastIndexOf("score.notes");
+            if (level.rthm[measure].notes == "[].concat("){
                 alert("Tieing notes across barlines not currently supported!");
             }
             else{
-               level.rthm[measure] =level.rthm[measure].slice(0, tieHere) + "tie([].concat(" +level.rthm[measure].slice(tieHere);
+               level.rthm[measure].notes =level.rthm[measure].notes.slice(0, tieHere) + "tie([].concat(" +level.rthm[measure].notes.slice(tieHere);
                 endParen = endParen + "))"
             }
         }
         if (id == "."){
-            var here =level.rthm[measure].search(/(?<!#([0-9a-fA-F]{5}))(\d|r|\.)'(?!.*(?<!#([0-9a-fA-F]{5}))(\d|r|\.)')/g) + 1;
-            if (vexCodetoRhythmArray([level.rthm[measure].slice(0, here) + "." +level.rthm[measure].slice(here) + endParen]).reduce((prev, current) => prev + current.duration, 0) <= eval(testCode(level.time)) * 4){
-               level.rthm[measure] =level.rthm[measure].slice(0, here) + "." +level.rthm[measure].slice(here);
+            var here =level.rthm[measure].notes.search(/(?<!#([0-9a-fA-F]{5}))(\d|r|\.)'(?!.*(?<!#([0-9a-fA-F]{5}))(\d|r|\.)')/g) + 1;
+            if (vexCodetoRhythmArray([{notes: level.rthm[measure].notes.slice(0, here) + "." +level.rthm[measure].notes.slice(here) + endParen}]).reduce((prev, current) => prev + current.duration, 0) <= eval(testCode(level.time)) * 4){
+               level.rthm[measure].notes =level.rthm[measure].notes.slice(0, here) + "." +level.rthm[measure].notes.slice(here);
             }
             else{
                             alert("Dotting this note exceeds the measure's length!");
@@ -1135,17 +1110,17 @@ function editor(){//#need to add beam support
         }
         if (id == "tuplet"){
             if (document.getElementById("tuplet").checked){
-               level.rthm[measure] =level.rthm[measure].concat("score.beam(score.tuplet([].concat(");
+               level.rthm[measure].notes =level.rthm[measure].notes.concat("score.beam(score.tuplet([].concat(");
                 endParen = endParen + ")))";
             }
             else {
                 var numNotes = document.getElementById("notes").value;
                 var notesOccupied = document.getElementById("length").value;
-                if (level.rthm[measure].slice(level.rthm[measure].lastIndexOf("tuplet(")).match(/(?<!\d|[0-9a-fA-F]|'.)[1-4](?!\d|[0-9a-fA-F])/) != null){
-                    level.rthm[measure] = level.rthm[measure].replace(/score\.beam(?!.+score\.beam)/g, "");
+                if (level.rthm[measure].notes.slice(level.rthm[measure].notes.lastIndexOf("tuplet(")).match(/(?<!\d|[0-9a-fA-F]|'.)[1-4](?!\d|[0-9a-fA-F])/) != null){
+                    level.rthm[measure].notes = level.rthm[measure].notes.replace(/score\.beam(?!.+score\.beam)/g, "");
                 }
                 if (numNotes == ""){
-                    numNotes = level.rthm[measure].slice(level.rthm[measure].lastIndexOf("tuplet(")).matchAll("notes").toArray().length;
+                    numNotes = level.rthm[measure].notes.slice(level.rthm[measure].notes.lastIndexOf("tuplet(")).matchAll("notes").toArray().length;
                 }
                 if (notesOccupied == ""){
                     c = 0;
@@ -1154,7 +1129,7 @@ function editor(){//#need to add beam support
                     }
                     notesOccupied = Math.pow(2, c - 1);
                 }
-               level.rthm[measure] =level.rthm[measure].concat("), {num_notes: " + String(numNotes) +", notes_occupied: " + String(notesOccupied) + "})).concat(");
+               level.rthm[measure].notes =level.rthm[measure].notes.concat("), {num_notes: " + String(numNotes) +", notes_occupied: " + String(notesOccupied) + "})).concat(");
                 endParen = endParen.replace("))", "");
             } 
         }
@@ -1164,10 +1139,10 @@ function editor(){//#need to add beam support
             document.getElementById("editorMenu").hidden = false;
         }
         if ((!(document.getElementById("tuplet").checked) && id != "delete")){
-            if (vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0) > eval(testCode(level.time)) * 4){
-                var end = level.rthm[measure].lastIndexOf("score.notes")
-                level.rthm[measure] =level.rthm[measure].slice(0, end);
-                var fill = ((eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0)));
+            if (vexCodetoRhythmArray([{notes: level.rthm[measure].notes + endParen}]).reduce((prev, current) => prev + current.duration, 0) > eval(testCode(level.time)) * 4){
+                var end = level.rthm[measure].notes.lastIndexOf("score.notes")
+                level.rthm[measure].notes =level.rthm[measure].notes.slice(0, end);
+                var fill = ((eval(testCode(level.time)) * 4 - vexCodetoRhythmArray([{notes: level.rthm[measure].notes + endParen}]).reduce((prev, current) => prev + current.duration, 0)));
                 var val = []
                 var h = 0;
                 while (fill > 0){
@@ -1189,8 +1164,8 @@ function editor(){//#need to add beam support
                 }
             }
             if (id != "delete"){
-                if (Number(vexCodetoRhythmArray([level.rthm[measure] + endParen]).reduce((prev, current) => prev + current.duration, 0).toFixed(10)) == eval(testCode(level.time)) * 4){
-                    level.rthm[measure] = level.rthm[measure] + endParen;
+                if (Number(vexCodetoRhythmArray([{notes: level.rthm[measure].notes + endParen}]).reduce((prev, current) => prev + current.duration, 0).toFixed(10)) == eval(testCode(level.time)) * 4){
+                    level.rthm[measure].notes = level.rthm[measure].notes + endParen;
                     editRender(level.rthm, measure);
                     //measure += 1;
                     document.getElementById("measure").value = String(measure + 1);
