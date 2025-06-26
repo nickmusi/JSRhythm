@@ -986,8 +986,39 @@ function editor(){//#need to add beam support
     document.getElementById("editor").hidden = false;
     document.getElementById("sheetMusic").hidden = false;
     document.addEventListener("click", (event) => {if (inputBool && event.target.id != "measure"){inputs(event)};}, {signal: globalAbort.signal});
+    document.addEventListener("change", (event)=>{if (inputBool && event.target.id != "measure"){inputs(event)};}, {signal: globalAbort.signal});
     document.addEventListener("keydown", (event) => {if (inputBool && event.key == "Escape"){inputs(event)};}, {signal: globalAbort.signal});
-    document.getElementById("measure").addEventListener("change", (event) => {editRender(level.rthm, Number(event.target.value));}, {signal: globalAbort.signal});
+    document.getElementById("measure").addEventListener("change", (event) => {
+        if (level.rthm[measure] != undefined){
+            bMeasure = document.getElementById("measure").value;
+            while (bMeasure > 0 && level.rthm[bMeasure].beam == undefined){
+                bMeasure -= 1;
+            }
+
+            for (b = 0; document.getElementById("beam" + String(b)) != null; b += 2){
+                document.getElementById("beam" + String(b)).value = 0;
+                document.getElementById("beam" + String(b + 1)).value = 8;
+            };
+
+            for (g in level.rthm[bMeasure].beam){
+                document.getElementById("beam" + String(g)).value = level.rthm[bMeasure].beam[g];
+                for (b = 0; document.getElementById("beam" + String(b)) != null; b += 2){};
+                if (document.getElementById("beam" + String(b - 2)).value != "" && document.getElementById("beam" + String(b - 2)).value != "0"){//adds elements as needed
+                    document.getElementById("beam" + String(b - 2)).insertAdjacentHTML("afterend", "<input name=\"beam\" class=\"beamNumber\" id=\"beam" + String(b) + "\" type=\"number\">")
+                    document.getElementById("beam" + String(b - 1)).insertAdjacentHTML("afterend", "<input name=\"beam\" class=\"beamNumber\" id=\"beam" + String(b + 1) + "\" type=\"number\" value=\"8\">")
+                }
+                else{
+                    while (document.getElementById("beam" + String(b - 4)).value == "" || document.getElementById("beam" + String(b - 4)).value == "0"){//removes unneeded elements
+                        document.getElementById("beam" + String(b - 2)).remove();
+                        document.getElementById("beam" + String(b - 1)).remove();
+                        b -= 2;
+                    }
+                }
+            }
+        }
+        editRender(level.rthm, Number(event.target.value));
+    }, {signal: globalAbort.signal});
+
     document.getElementsByName("colors").forEach((element) => {
         element.value = colorSet[element.id];
         element.addEventListener("change", (event) => {
@@ -1039,17 +1070,12 @@ function editor(){//#need to add beam support
             }
             measure = Number(document.getElementById("measure").value);
 
-            for (g in level.rthm[measure].beam){//#need to find latest instance of beam and index that here
-                document.getElementById("beam" + String(g)).value = level.rthm[measure].beam[g];
-                document.getElementById("beam" + String(g)).click();
-            }
-
             if (id != "delete"){
                 level.rthm.splice(measure, 0, {notes: "[].concat("});
                 endParen = ")";
             }
         }
-        if (id.replaceAll(/\d/g, "") == "beam"){
+        if (id.replaceAll(/\d/g, "") == "beam"){//there is a duplicate of this above for on change event
             for (b = 0; document.getElementById("beam" + String(b)) != null; b++){}
             if (document.getElementById("beam" + String(b - 2)).value != "" && document.getElementById("beam" + String(b - 2)).value != "0"){//adds elements as needed
                 document.getElementById("beam" + String(b - 2)).insertAdjacentHTML("afterend", "<input name=\"beam\" class=\"beamNumber\" id=\"beam" + String(b) + "\" type=\"number\">")
