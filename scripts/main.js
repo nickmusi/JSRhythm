@@ -991,7 +991,7 @@ function editor(){//#need to add beam support
     document.getElementById("measure").addEventListener("change", (event) => {
         if (level.rthm[measure] != undefined){
             bMeasure = document.getElementById("measure").value;
-            while (bMeasure > 0 && level.rthm[bMeasure].beam == undefined){
+            while (bMeasure > 0 && (level.rthm[bMeasure] == undefined || level.rthm[bMeasure].beam == undefined)){
                 bMeasure -= 1;
             }
 
@@ -1071,8 +1071,17 @@ function editor(){//#need to add beam support
             measure = Number(document.getElementById("measure").value);
 
             if (id != "delete"){
-                level.rthm.splice(measure, 0, {notes: "[].concat("});
-                endParen = ")";
+                if (id.replaceAll(/\d/g, "") == "beam"){
+                    if (level.rthm[measure] == undefined){
+                        level.rthm.splice(measure, 0, {notes: "[].concat("});
+                        endParen = ")";
+                    }
+                }
+                else{
+                    level.rthm.splice(measure, 0, {notes: "[].concat("});
+                    endParen = ")";
+                }
+                
             }
         }
         if (id.replaceAll(/\d/g, "") == "beam"){//there is a duplicate of this above for on change event
@@ -1092,6 +1101,7 @@ function editor(){//#need to add beam support
             for (b = 0; document.getElementById("beam" + String(b + 2)) != null; b++){
                 level.rthm[measure].beam[b] = Number(document.getElementById("beam" + String(b)).value);
             }
+            editRender(level.rthm, measure);
         }
         if (id == "1"){
             if (document.getElementById("rest0").checked){
@@ -1211,7 +1221,7 @@ function editor(){//#need to add beam support
                     h -= 1;
                 }
             }
-            if (id != "delete"){
+            if (id != "delete" && id.replaceAll(/\d/g, "") != "beam"){
                 if (Number(vexCodetoRhythmArray([{notes: level.rthm[measure].notes + endParen}]).reduce((prev, current) => prev + current.duration, 0).toFixed(10)) == eval(testCode(level.time)) * 4){
                     level.rthm[measure].notes = level.rthm[measure].notes + endParen;
                     editRender(level.rthm, measure);
