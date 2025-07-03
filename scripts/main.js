@@ -522,7 +522,7 @@ function play(){
             document.getElementById("winMenu").hidden = false;
             audio.pause();
             menus();
-        }, eval(level.time) * 4 * secsPerBeat * 1000);
+        }, eval(testCode(level.time)) * 4 * secsPerBeat * 1000);
         
     }
 
@@ -820,8 +820,8 @@ function play(){
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.clearRect(0, 0, -position, canvas.height);
-        if (((position + canvas.width) / pixPerBeat) / (eval(level.time) * 4) > level.rthm.length){
-            ctx.clearRect((level.rthm.length * (eval(level.time) * 4)) * pixPerBeat - position, 0, pixPerBeat * 4, canvas.height);
+        if (((position + canvas.width) / pixPerBeat) / (eval(testCode(level.time)) * 4) > level.rthm.length){
+            ctx.clearRect((level.rthm.length * (eval(testCode(level.time)) * 4)) * pixPerBeat - position, 0, pixPerBeat * 4, canvas.height);
         }
         var rendered = new Path2D(playerTrailPath);
         if (position + canvas.width / 2 >= 0){rendered.lineTo(position + canvas.width / 2, canvas.height - playerHeight);}
@@ -1318,7 +1318,7 @@ function calcCanvSize(){
     document.getElementById("game").height = String(Math.min(document.getElementById("game").width / 2.5, window.innerHeight / 2));
     secsPerBeat = (1 / level.bpm) * 60;
     millisPerBeat = secsPerBeat * 1000;
-    pixPerBeat = document.getElementById("game").height / (eval(level.time) * 4);//#add some scaling for smaller devices, etc, but have to keep level rendering the same across devices (must scale after)
+    pixPerBeat = document.getElementById("game").height / (eval(testCode(level.time)) * 4);//#add some scaling for smaller devices, etc, but have to keep level rendering the same across devices (must scale after)
     pixPerSec = pixPerBeat / secsPerBeat;
 }
 
