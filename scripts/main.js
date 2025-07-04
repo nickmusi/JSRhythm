@@ -1020,7 +1020,7 @@ function editor(){//#need to add beam support
                 }
             }
             edRhythmArray = vexCodetoRhythmArray(level.rthm);
-            for (c = 0; edRhythmArray[c].measure < document.getElementById("measure").value; c++){}
+            for (c = 0; edRhythmArray[c + 1] != undefined && edRhythmArray[c].measure < document.getElementById("measure").value; c++){}
             while (c > 0 && edRhythmArray[c].colors == undefined){
                 c -= 1;
             }
