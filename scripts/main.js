@@ -316,6 +316,7 @@ function menus(){
         }
         if (name == "load"){
             colorNext = false;
+            document.getElementById("measure").value = "0";
             event.target.addEventListener("change", ()=>{
                 event.target.files[0].text()
                 .then((text) =>{
@@ -980,6 +981,11 @@ function editor(){//#need to add beam support
     }
     calcCanvSize();
     var measure = -2;
+    document.getElementById("measure").value = 0;
+    if (level.rthm[0] != undefined){
+        colorSet = vexCodetoRhythmArray([level.rthm[0]])[0].colors;
+        drawEdCanv();
+    } 
     var endParen = ")";//#editor needs to load colors from level file on editor load and changing measures
     colorNext = true;//#going back and adding something in the middle of level file then adds concat( to the next measure, which breaks things (it is an empty measure with just concat(  )
 
@@ -1015,6 +1021,17 @@ function editor(){//#need to add beam support
                     }
                 }
             }
+            edRhythmArray = vexCodetoRhythmArray(level.rthm);
+            for (c = 0; edRhythmArray[c].measure < document.getElementById("measure").value; c++){}
+            while (c > 0 && edRhythmArray[c].colors == undefined){
+                c -= 1;
+            }
+            colorSet = edRhythmArray[c].colors;
+            document.getElementsByName("colors").forEach((element) => {
+                element.value = colorSet[element.id];
+            });
+            drawEdCanv();
+
         }
         editRender(level.rthm, Number(event.target.value));
     }, {signal: globalAbort.signal});
@@ -1031,6 +1048,9 @@ function editor(){//#need to add beam support
     drawEdCanv();
     
     function drawEdCanv() {
+        document.getElementsByName("colors").forEach((element) => {
+            element.value = colorSet[element.id];
+        });
         edCanv = document.getElementById("placeColor");
         edCtx = edCanv.getContext("2d");
         edCtx.fillStyle = colorSet.walls;
@@ -1067,6 +1087,7 @@ function editor(){//#need to add beam support
             
             if (document.getElementById("measure").value == String(-100)){
                 document.getElementById("measure").value = String(0);
+                colorNext == true;
             }
             measure = Number(document.getElementById("measure").value);
 
