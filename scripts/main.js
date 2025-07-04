@@ -45,7 +45,8 @@ var Dev = {
     restWidth: 0.125,
     greenError: 0.1,
     orangeError: 0.2,//All above this will be red
-    numCountDown: 4
+    numCountDown: 4,
+    appearWidth: 250//width of appearing measures
 }
 var colorSet = {
     walls: '#000000',
@@ -390,7 +391,13 @@ function play(){
         }
     }, {signal: globalAbort.signal});
 
-    document.getElementById("countdown").style = "position: absolute; margin-left: 25vw; font-size: xx-large;"
+    document.getElementById("countdown").style = "position: absolute; margin-left: 25vw; font-size: xx-large;";
+    if (Settings.sheetMusicMode == "scroll"){
+
+    }
+    if (Settings.sheetMusicMode == "line"){
+        render(level.rthm, rhythmArray[i].measure, Math.floor(window.innerWidth / Dev.appearWidth));
+    }
     for (countVar = Dev.numCountDown; level.offset + Settings.inputOffset < countVar * secsPerBeat; countVar -= 1){
         setTimeout((val) => {document.getElementById("countdown").innerHTML = String(val); document.getElementById("countdown").hidden = false;}, ((Dev.numCountDown - countVar) * secsPerBeat + Settings.inputOffset) * 1000, countVar);//endingcountVarfreezes the value of it right theree and assigns it to val
     }
@@ -429,12 +436,7 @@ function play(){
         }
 
         if(Settings.sheetMusicMode == "line"){
-            render(level.rthm, rhythmArray[i].measure);
-            svg = document.getElementById("sheetMusic").children.item(0);
-            svg.setAttribute("viewBox", "200, 0, 400, 150");
-            svg.setAttribute("width", String(canvas.width));
-            svg.setAttribute("height", "150")
-            svg.setAttribute("style", "");
+            render(level.rthm, rhythmArray[i].measure, Math.floor(canvas.width / Dev.appearWidth));
         };
 
         if (rhythmArray[i].rest){
@@ -679,12 +681,8 @@ function play(){
         failTimeID = setTimeout(() => {error = Settings.threshold; if (!practice){fail();}
             else{pracFail();}}, Math.max(time + Math.abs(Settings.inputOffset * 1000), millisPerBeat * Settings.threshold + Math.abs(Settings.inputOffset * 1000)));
         if(Settings.sheetMusicMode == "line"){
-            render(level.rthm, rhythmArray[i].measure);
+            render(level.rthm, rhythmArray[i].measure, Math.floor(canvas.width / Dev.appearWidth));
             svg = document.getElementById("sheetMusic").children.item(0);
-            svg.setAttribute("viewBox", "200, 0, 400, 150");
-            svg.setAttribute("width", String(canvas.width));
-            svg.setAttribute("height", "150")
-            svg.setAttribute("style", "");
         }
     }
 

@@ -64,21 +64,24 @@ function newMeasure(vexCode = "", width = 200, options = {time: "-1", key: "-1",
 
 function render(measures = [], position = 0, number = 4){//number is number of measures to render
   document.getElementById("sheetMusic").innerHTML = "";
-  vf = new Vex.Flow.Factory({renderer: {elementId: "sheetMusic", width: 1000, height: 200}});
+  vf = new Vex.Flow.Factory({renderer: {elementId: "sheetMusic", width: window.innerWidth, height: 200}});
   score = vf.EasyScore();
   score.set({ time: level.time });
   x = 0;
-  for (m = 0; m < number; m++){
+  for (m = 0; m < number && measures[m]; m++){
     var a = m + Math.max(Math.floor(((number / 2 - m) + position) / number) * number, 0)
-    beamA = a
-    while (measures[beamA].beam == undefined && beamA > 0){
-      beamA -= 1;
-    }
-    if (m == 0){
-      newMeasure(measures[a].notes, 250, {time: level.time, clef: "percussion", beam: measures[beamA].beam});
-    }
-    else{
-      newMeasure(measures[a].notes, 250, {beam: measures[beamA].beam});
+    a = Math.min(a, measures.length - 1 - (number - m) + measures.length % number)
+    if (measures[a] != undefined){
+      beamA = a
+      while (measures[beamA].beam == undefined && beamA > 0){
+        beamA -= 1;
+      }
+      if (m == 0){
+        newMeasure(measures[a].notes, Dev.appearWidth, {time: level.time, clef: "percussion", beam: measures[beamA].beam});
+      }
+      else{
+        newMeasure(measures[a].notes, Dev.appearWidth, {beam: measures[beamA].beam});
+      }
     }
   }
 }
