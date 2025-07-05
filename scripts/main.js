@@ -1019,18 +1019,17 @@ function editor(){//#need to add beam support
                     }
                 }
             }
-            edRhythmArray = vexCodetoRhythmArray(level.rthm);
-            for (c = 0; edRhythmArray[c + 1] != undefined && edRhythmArray[c].measure < document.getElementById("measure").value; c++){}
-            while (c > 0 && edRhythmArray[c].colors == undefined){
-                c -= 1;
-            }
-            colorSet = edRhythmArray[c].colors;
-            document.getElementsByName("colors").forEach((element) => {
-                element.value = colorSet[element.id];
-            });
-            drawEdCanv();
-
         }
+        edRhythmArray = vexCodetoRhythmArray(level.rthm);
+        for (c = 0; edRhythmArray[c + 1] != undefined && edRhythmArray[c].measure < document.getElementById("measure").value; c++){}
+        while (c > 0 && edRhythmArray[c].colors == undefined){
+            c -= 1;
+        }
+        colorSet = edRhythmArray[c].colors;
+        document.getElementsByName("colors").forEach((element) => {
+            element.value = colorSet[element.id];
+        });
+        drawEdCanv();
         editRender(level.rthm, Number(event.target.value));
     }, {signal: globalAbort.signal});
 
@@ -1085,7 +1084,7 @@ function editor(){//#need to add beam support
             
             if (document.getElementById("measure").value == String(-100)){
                 document.getElementById("measure").value = String(0);
-                colorNext == true;
+                colorNext = true;
             }
             measure = Number(document.getElementById("measure").value);
 
