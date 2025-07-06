@@ -1,11 +1,6 @@
 {
     "Cloud Bubble": "resources/levels/Cloud Bubble.json",
     "Electricity": "resources/levels/Electricity.json",
-    "Moon Rocks": "resources/levels/Moon Rocks.json",
-    "new3": "newlevel3.json",
-    "new4": "newlevel4.json",
-    "new5": "newlevel5.json",
-    "new6": "newlevel6.json",
-    "new7": "newlevel7.json",
-    "new8": "newlevel8.json" 
+    "Mulberry Tree": "resources/levels/Mulberry Tree.json",
+    "Moon Rocks": "resources/levels/Moon Rocks.json"
 }
