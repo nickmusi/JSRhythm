@@ -1080,7 +1080,7 @@ function editor(){//#need to add beam support
 
     function inputs(event){
         var id = event.srcElement.id;
-        if (measure != Number(document.getElementById("measure").value)){
+        if (measure != Number(document.getElementById("measure").value) && id != ""){
             
             if (document.getElementById("measure").value == String(-100)){
                 document.getElementById("measure").value = String(0);
@@ -1214,7 +1214,7 @@ function editor(){//#need to add beam support
             menus();
             document.getElementById("editorMenu").hidden = false;
         }
-        if ((!(document.getElementById("tuplet").checked) && id != "delete")){
+        if ((!(document.getElementById("tuplet").checked) && id != "delete" && id != "")){
             if (vexCodetoRhythmArray([{notes: level.rthm[measure].notes + endParen}]).reduce((prev, current) => prev + current.duration, 0) > eval(testCode(level.time)) * 4){
                 var end = level.rthm[measure].notes.lastIndexOf("score.notes")
                 level.rthm[measure].notes =level.rthm[measure].notes.slice(0, end);
