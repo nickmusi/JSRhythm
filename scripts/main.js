@@ -716,10 +716,16 @@ function play(){
         path.moveTo(x, Math.abs(y));
         //var k = 0;
         var l = 0;
+        restBoth = false;
         while (l < rhythmArray.length){
             if (rhythmArray[l].rest){
                     restA.moveTo(x - (Dev.restWidth * pixPerBeat / 2), Math.abs(y));
                     restA.lineTo(x + (Dev.restWidth * pixPerBeat / 2), Math.abs(y));
+                    if ((Math.abs(y) < Settings.threshold * pixPerBeat || Math.abs(y) > canvas.height - Settings.threshold * pixPerBeat) && restBoth){
+                        restA.moveTo(x - (Dev.restWidth * pixPerBeat / 2), Math.abs(Math.abs(y) - canvas.height));
+                        restA.lineTo(x + (Dev.restWidth * pixPerBeat / 2), Math.abs(Math.abs(y) - canvas.height));
+                        restBoth = false;
+                    }
             }
             
             if (Math.abs(y) + Math.sign(y) * pixPerBeat * rhythmArray[l].duration > canvas.height){
@@ -727,6 +733,7 @@ function play(){
                 var y1 = canvas.height;
                 path.lineTo(x1 + 30, y1 + 30);
                 path.moveTo(x1 - 30, 0 - 30);
+                restBoth = true;
                 x += pixPerBeat * rhythmArray[l].duration;
                 y = ((Math.abs(y) + Math.sign(y) * pixPerBeat * rhythmArray[l].duration) - canvas.height);
 
@@ -736,16 +743,19 @@ function play(){
                 var y2 = 0
                 path.lineTo(x2 + 30, y2 - 30);
                 path.moveTo(x2 - 30, canvas.height + 30);
+                restBoth = true;
                 x += pixPerBeat * rhythmArray[l].duration;
                 y = -1 * ((Math.abs(y) + Math.sign(y) * pixPerBeat * rhythmArray[l].duration) + canvas.height);
             }
             else if (Math.abs(y) + Math.sign(y) * pixPerBeat * rhythmArray[l].duration == 0){
                 x += pixPerBeat * rhythmArray[l].duration;
                 y = -0.000000000000001;
+                restBoth = false;
             }
             else{
                 x += pixPerBeat * rhythmArray[l].duration;
                 y = Math.sign(y) * (Math.abs(y) + Math.sign(y) * pixPerBeat * rhythmArray[l].duration);
+                restBoth = false;
             }
             //playerPathArray[l] = -Math.sign(y) * (document.getElementById("game").height - Math.abs(y) + 0.000000001);
             //rhythmArray[l].y = -Math.sign(y) * (document.getElementById("game").height - Math.abs(y) + 0.000000001);
@@ -841,8 +851,7 @@ function play(){
         ctx.strokeStyle = colorSet.path;
         ctx.stroke(path);//#need to add rest animation, probably need to add a separate path
         ctx.strokeStyle = colorSet.rest;
-        //ctx.lineWidth = Math.sqrt((Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)) + (Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)));
-        ctx.lineWidth = 2 * canvas.height;
+        ctx.lineWidth = Math.sqrt((Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)) + (Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)));
         ctx.stroke(restA);
         ctx.strokeStyle = colorSet.trail;
         ctx.lineWidth = (Dev.playerWidth * pixPerBeat) / 2;
