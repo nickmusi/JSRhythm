@@ -522,7 +522,19 @@ function play(){
         window.localStorage.setItem("records", JSON.stringify(records));
         
         setTimeout(() => {
-            document.getElementById("winMenu").hidden = false;
+            for (z in document.getElementById("selector").children){
+                if (document.getElementById("selector").children[z].children != undefined){
+                    if (document.getElementById("selector").children[z].children[0].innerHTML == level.title){
+                        if (document.getElementById("selector").children[z].nextElementSibling == null){
+                            document.getElementById("next").hidden = true;
+                        }
+                        else{
+                            document.getElementById("next").hidden = false;
+                        }
+                    }
+                }
+            }
+            document.getElementById("winMenu").hidden = false;//#zz
             audio.pause();
             menus();
         }, eval(testCode(level.time)) * 4 * secsPerBeat * 1000);
@@ -829,7 +841,8 @@ function play(){
         ctx.strokeStyle = colorSet.path;
         ctx.stroke(path);//#need to add rest animation, probably need to add a separate path
         ctx.strokeStyle = colorSet.rest;
-        ctx.lineWidth = Math.sqrt((Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)) + (Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)));
+        //ctx.lineWidth = Math.sqrt((Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)) + (Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)));
+        ctx.lineWidth = 2 * canvas.height;
         ctx.stroke(restA);
         ctx.strokeStyle = colorSet.trail;
         ctx.lineWidth = (Dev.playerWidth * pixPerBeat) / 2;
