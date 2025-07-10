@@ -606,6 +606,7 @@ function play(){
         while (rhythmArray[i].measure == prevMeasure){
             i -= 1;
         }
+        //I think the problem with respawning on a measure with rests is that pracFail gets called twice for some reason.
         i = Math.max(i + 1, 0);
         audio.currentTime = rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) * secsPerBeat + level.offset;
         prevTime = audio.currentTime;
