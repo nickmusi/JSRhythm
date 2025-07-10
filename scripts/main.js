@@ -683,6 +683,10 @@ function play(){
         
         }
 
+        /*if (rhythmArray[i].rest){
+                setTimeout(() => {userPerformance(); console.log("hi")}, 1000 * (Settings.inputOffset));
+        }//#this should fix the rest problem with resapwn, but it doesn't*/
+
         time = 1000 * (secsPerBeat * rhythmArray.slice(0, i).reduce((prev, current,) => prev + current.duration, 0) - (document.getElementById("audio").currentTime - level.offset)) + millisPerBeat * Settings.threshold;
 
         failTimeID = setTimeout(() => {error = Settings.threshold; if (!practice){fail();}
@@ -859,14 +863,14 @@ function play(){
 
         
         if (playerHeight > canvas.height){//#change logic here to check if the direction (performance) matches the direction that teleporting would end up placing you
-            if (((Math.abs(canvas.height - playerHeight - rhythmArray[i - 1].y) > 2 * Settings.threshold * pixPerBeat) || rhythmArray[i - 2].x - (position + canvas.width / 2) > 2 * pixPerBeat * (Settings.threshold))){
+            if ((rhythmArray[i - 2] != undefined) && ((Math.abs(canvas.height - playerHeight - rhythmArray[i - 1].y) > 2 * Settings.threshold * pixPerBeat) || rhythmArray[i - 2].x - (position + canvas.width / 2) > 2 * pixPerBeat * (Settings.threshold))){
                 playerTrailPath.lineTo(position + canvas.width / 2, canvas.height - playerHeight);
                 playerHeight = playerHeight - canvas.height;
                 playerTrailPath.moveTo(position + canvas.width / 2 - 30, canvas.height - playerHeight + 30);
             }
         }
         if (playerHeight < 0){
-            if (((Math.abs(canvas.height - playerHeight - rhythmArray[i - 1].y) > 2 * Settings.threshold * pixPerBeat) || rhythmArray[i - 2].x - (position + canvas.width / 2) > 2 * pixPerBeat * (Settings.threshold))){
+            if ((rhythmArray[i - 2] != undefined) && ((Math.abs(canvas.height - playerHeight - rhythmArray[i - 1].y) > 2 * Settings.threshold * pixPerBeat) || rhythmArray[i - 2].x - (position + canvas.width / 2) > 2 * pixPerBeat * (Settings.threshold))){
                 playerTrailPath.lineTo(position + canvas.width / 2, canvas.height - playerHeight);
                 playerHeight = canvas.height + playerHeight;
                 playerTrailPath.moveTo(position + canvas.width / 2 - 30, canvas.height - playerHeight - 30);
