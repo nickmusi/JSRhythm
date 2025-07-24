@@ -1,0 +1,144 @@
+{
+    "time": "4/4",
+    "bpm": 119.52,
+    "offset": 2.00803212,
+    "title": "Ant Hill",
+    "artist": "Nick Sewell",
+    "location": "resources/levels/Ant Hill.mp3",
+    "creator": "",
+    "difficulty": "Beginner",
+    "rthm": [
+        {
+            "notes": "[].concat(score.notes('B4/4', {walls:'#639fee',path:'#3ce276',trail:'#3ce276',player:'#9f192d',rest:'#639fee'}), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4/r'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/1'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/2/r.'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2', {walls:'#bf9c8d',path:'#684a40',trail:'#251d18',player:'#9f192d',rest:'#9f192d'}), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/1'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/1'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2', {walls:'#443a31',path:'#9f192d',trail:'#251d18',player:'#9f192d',rest:'#834d20'}), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/1'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4/r'), score.notes('B4/4', {walls:'#443a31',path:'#db8484',trail:'#251d18',player:'#9f192d',rest:'#834d20'}), score.notes('B4/4', {walls:'#314438',path:'#db8484',trail:'#251d18',player:'#9f192d',rest:'#834d20'}), score.notes('B4/4', {walls:'#349859',path:'#ffffff',trail:'#251d18',player:'#9f192d',rest:'#834d20'}), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4', {walls:'#349859',path:'#ffffff',trail:'#5bb8e6',player:'#9f192d',rest:'#834d20'}), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/2/r'), score.notes('B4/4'), score.notes('B4/8/r'), score.notes('B4/8'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/2/r.'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4', {walls:'#349859',path:'#ffffff',trail:'#5bb8e6',player:'#9f192d',rest:'#834d20'}), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4, B4/4/r'), score.notes('B4/4/r.'), score.notes('B4/8'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/2/r.'), )"
+        }
+    ]
+}
