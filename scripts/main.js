@@ -845,10 +845,6 @@ function play(){
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.clearRect(0, 0, -position, canvas.height);
-        if (((position + canvas.width) / pixPerBeat) / (eval(testCode(level.time)) * 4) > level.rthm.length){
-            ctx.clearRect((level.rthm.length * (eval(testCode(level.time)) * 4)) * pixPerBeat - position, 0, pixPerBeat * 4, canvas.height);
-        }
         var rendered = new Path2D(playerTrailPath);
         if (position + canvas.width / 2 >= 0){rendered.lineTo(position + canvas.width / 2, canvas.height - playerHeight);}
         ctx.setTransform(1, 0, 0, 1, -position, 0);
@@ -858,9 +854,6 @@ function play(){
         ctx.strokeStyle = colorSet.rest;
         ctx.lineWidth = Math.sqrt((Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)) + (Math.pow(pixPerBeat * Settings.threshold + (Dev.playerWidth * pixPerBeat), 2)));
         ctx.stroke(restA);
-        ctx.strokeStyle = colorSet.trail;
-        ctx.lineWidth = (Dev.playerWidth * pixPerBeat) / 2;
-        ctx.stroke(rendered);
 
         
         if (playerHeight > canvas.height){//#change logic here to check if the direction (performance) matches the direction that teleporting would end up placing you
@@ -879,6 +872,15 @@ function play(){
         }
         prevTime = audio.currentTime;
         ctx.fillStyle = colorSet.player;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, -position, canvas.height);
+        if (((position + canvas.width) / pixPerBeat) / (eval(testCode(level.time)) * 4) > level.rthm.length){
+            ctx.clearRect((level.rthm.length * (eval(testCode(level.time)) * 4)) * pixPerBeat - position, 0, pixPerBeat * 4, canvas.height);
+        }
+        ctx.setTransform(1, 0, 0, 1, -position, 0);
+        ctx.strokeStyle = colorSet.trail;
+        ctx.lineWidth = (Dev.playerWidth * pixPerBeat) / 2;
+        ctx.stroke(rendered);
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillRect(canvas.width / 2 - (Dev.playerWidth * pixPerBeat) / 2, canvas.height - playerHeight - (Dev.playerWidth * pixPerBeat) / 2, (Dev.playerWidth * pixPerBeat), (Dev.playerWidth * pixPerBeat));
 
