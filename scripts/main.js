@@ -1019,7 +1019,7 @@ function editor(){//#need to add beam support
     document.getElementById("editor").hidden = false;
     document.getElementById("sheetMusic").hidden = false;
     document.addEventListener("click", (event) => {if (inputBool && event.target.id != "measure"){inputs(event)};}, {signal: globalAbort.signal});
-    document.addEventListener("change", (event)=>{if (inputBool && event.target.id != "measure"){inputs(event)};}, {signal: globalAbort.signal});
+    document.addEventListener("change", (event)=>{if (inputBool && event.target.id != "measure" && event.target.id != "tuplet"){inputs(event)};}, {signal: globalAbort.signal});
     document.addEventListener("keydown", (event) => {if (inputBool && event.key == "Escape"){inputs(event)};}, {signal: globalAbort.signal});
     document.getElementById("measure").addEventListener("change", (event) => {
         if (level.rthm[measure] != undefined){
