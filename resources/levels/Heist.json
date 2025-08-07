@@ -1,0 +1,81 @@
+{
+    "time": "7/8",
+    "bpm": 133.93,
+    "offset": 1.56798327,
+    "title": "Heist",
+    "artist": "Nick Sewell",
+    "location": "resources/levels/Heist.mp3",
+    "creator": "",
+    "difficulty": "Beginner",
+    "rthm": [
+        {
+            "notes": "[].concat(score.notes('B4/8', {walls:'#000000',path:'#616161',trail:'#a1a1a1',player:'#23264d',rest:'#dde000'}), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), )",
+            "beam": [
+                3,
+                8,
+                2,
+                8,
+                2,
+                8
+            ]
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4.'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8', {walls:'#000000',path:'#616161',trail:'#a1a1a1',player:'#23264d',rest:'#dde000'}), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8/r'), score.notes('B4/8'), score.notes('B4/8/r'), score.notes('B4/8'), )"
+        },
+        {
+            "notes": "[].concat(tie([].concat(score.notes('B4/4.'), tie([].concat(score.notes('B4/4'), score.notes('B4/4'), )))))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4.'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4.'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/4'), )",
+            "beam": [
+                2,
+                8,
+                2,
+                8,
+                3,
+                8
+            ]
+        },
+        {
+            "notes": "[].concat(tie([].concat(score.notes('B4/4.'), tie([].concat(score.notes('B4/4'), score.notes('B4/4'), )))))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8'), score.notes('B4/4/r'), score.notes('B4/4/r'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r'), score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8/r'), score.notes('B4/8'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(tie([].concat(score.notes('B4/4.'), tie([].concat(score.notes('B4/4'), score.notes('B4/4'), )))))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4.'), score.notes('B4/4/r'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), )",
+            "beam": [
+                3,
+                8,
+                2,
+                8,
+                2,
+                8
+            ]
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8'), score.notes('B4/4/r', {walls:'#ffffff',path:'#ffffff',trail:'#ffffff',player:'#ffffff',rest:'#ffffff'}), score.notes('B4/4/r'), score.notes('B4/4/r'), )"
+        }
+    ]
+}
