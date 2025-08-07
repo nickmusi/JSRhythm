@@ -1215,15 +1215,12 @@ function editor(){//#need to add beam support
         }
         if (id == "tuplet"){
             if (document.getElementById("tuplet").checked){
-               level.rthm[measure].notes =level.rthm[measure].notes.concat("score.beam(score.tuplet([].concat(");
-                endParen = endParen + ")))";
+               level.rthm[measure].notes =level.rthm[measure].notes.concat("score.tuplet([].concat(");
+                endParen = endParen + "))";
             }
             else {
                 var numNotes = document.getElementById("notes").value;
                 var notesOccupied = document.getElementById("length").value;
-                if (level.rthm[measure].notes.slice(level.rthm[measure].notes.lastIndexOf("tuplet(")).match(/(?<!\d|[0-9a-fA-F]|'.)[1-4](?!\d|[0-9a-fA-F])/) != null){
-                    level.rthm[measure].notes = level.rthm[measure].notes.replace(/score\.beam(?!.+score\.beam)/g, "");
-                }
                 if (numNotes == ""){
                     numNotes = level.rthm[measure].notes.slice(level.rthm[measure].notes.lastIndexOf("tuplet(")).matchAll("notes").toArray().length;
                 }
