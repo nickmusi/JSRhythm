@@ -378,6 +378,7 @@ function play(){
                 inputBool == false;
                 audio.pause();
                 document.getElementById("pauseMenu").hidden = false;
+                document.getElementById("pauseMenu").children.namedItem("retry").focus();
                 if (records[String(level.title)] == undefined || audio.currentTime / audio.duration * 100 > records[level.title].progress){
                     records[String(level.title)] = {progress: audio.currentTime / audio.duration * 100};
                     window.localStorage.setItem("records", JSON.stringify(records));
@@ -560,10 +561,11 @@ function play(){
                 c -= 1;
             }
             colorSet = {...rhythmArray[c].colors};
-            setTimeout(() => {document.getElementById("failMenu").hidden = false;}, 1000);
+            setTimeout(() => {document.getElementById("failMenu").hidden = false; document.getElementById("failMenu").children.namedItem("retry").focus();}, 1000);
         }
         else{
             document.getElementById("failMenu").hidden = false;
+            document.getElementById("failMenu").children.namedItem("retry").focus();
         }
 
         menus();
@@ -581,10 +583,11 @@ function play(){
                 c -= 1;
             }
             colorSet = {...rhythmArray[c].colors};
-            setTimeout(() => {document.getElementById("pracFailMenu").hidden = false;}, 1000);
+            setTimeout(() => {document.getElementById("pracFailMenu").hidden = false; document.getElementById("pracFailMenu").children.namedItem("respawn").focus();}, 1000);
         }
         else{
             document.getElementById("pracFailMenu").hidden = false;
+            document.getElementById("pracFailMenu").children.namedItem("respawn").focus();
         }
         menus();
         if (rhythmArray[i].measure < 2){
