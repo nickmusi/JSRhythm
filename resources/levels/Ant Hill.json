@@ -9,7 +9,7 @@
     "difficulty": "Beginner",
     "rthm": [
         {
-            "notes": "[].concat(score.notes('B4/4', {walls:'#639fee',path:'#3ce276',trail:'#3ce276',player:'#9f192d',rest:'#639fee'}), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+            "notes": "[].concat(score.notes('B4/4', {walls:'#639fee',path:'#3ce276',trail:'#db6666',player:'#9f192d',rest:'#d8dfe9'}), score.notes('B4/4/r'), score.notes('B4/4'), score.notes('B4/4/r'), )"
         },
         {
             "notes": "[].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), )"
