@@ -536,6 +536,7 @@ function play(){
                 }
             }
             document.getElementById("winMenu").hidden = false;//#zz
+            document.getElementById("winMenu").children.namedItem("next").focus();
             audio.pause();
             menus();
         }, eval(testCode(level.time)) * 4 * secsPerBeat * 1000);
