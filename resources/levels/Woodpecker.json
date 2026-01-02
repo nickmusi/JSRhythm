@@ -1,0 +1,162 @@
+{
+    "time": "4/4",
+    "bpm": 113.64,
+    "offset": 2.111932416,
+    "title": "Woodpecker",
+    "artist": "Nick Sewell",
+    "location": "resources/levels/Woodpecker.mp3",
+    "creator": "",
+    "difficulty": "Intermediate",
+    "rthm": [
+        {
+            "notes": "[].concat(score.notes('B4/4.', {walls:'#be0404',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), tie([].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/4.'), )))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/1'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4.'), tie([].concat(score.notes('B4/8'), score.notes('B4/2'), )))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/1', {walls:'#0454be',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4.', {walls:'#be04b8',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), tie([].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/4.'), )))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/1', {walls:'#04be54',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4.', {walls:'#be0404',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), tie([].concat(score.notes('B4/8'), score.notes('B4/2'), )))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r', {walls:'#9e05f0',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8.'), tie([].concat(score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), )))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r', {walls:'#05f076',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8.'), tie([].concat(score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), )))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8.', {walls:'#f09a05',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), tie([].concat(score.notes('B4/16'), score.notes('B4/8'), tie([].concat(score.notes('B4/8'), score.notes('B4/16'), score.notes('B4/8.'), score.notes('B4/4/r'), )))))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8.', {walls:'#0576f0',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), tie([].concat(score.notes('B4/16'), score.notes('B4/8'), tie([].concat(score.notes('B4/8'), score.notes('B4/16'), score.notes('B4/8.'), score.notes('B4/4/r'), )))))"
+        },
+        {
+            "notes": "[].concat(score.tuplet([].concat(score.notes('B4/4', {walls:'#f00505',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), score.notes('B4/4'), score.notes('B4/4'), ), {num_notes: 3, notes_occupied: 2})).concat(score.notes('B4/8/r'), score.notes('B4/8'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.tuplet([].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), ), {num_notes: 3, notes_occupied: 2})).concat(score.notes('B4/8/r'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8.'), tie([].concat(score.notes('B4/16'), score.notes('B4/8'), tie([].concat(score.notes('B4/8'), score.notes('B4/16'), score.notes('B4/8.'), score.notes('B4/4/r'), )))))"
+        },
+        {
+            "notes": "[].concat(score.tuplet([].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), ), {num_notes: 3, notes_occupied: 2})).concat(score.tuplet([].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), ), {num_notes: 3, notes_occupied: 2})).concat()"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r', {walls:'#f05c5c',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('D5/1/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r', {walls:'#fbb1b1',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/4'), score.notes('B4/4/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('D5/1/r', {walls:'#e6e6e6',path:'#e6e6e6',trail:'#292929',player:'#8e1010',rest:'#d8db00'}), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/16', {walls:'#000000',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/16', {walls:'#ffffff',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), score.notes('B4/16'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/4', {walls:'#000000',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), score.notes('B4/8', {walls:'#ffffff',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), score.notes('B4/4.', {walls:'#000000',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), score.notes('B4/4', {walls:'#ffffff',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), )"
+        },
+        {
+            "notes": "[].concat(score.tuplet([].concat(score.notes('B4/8', {walls:'#000000',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8', {walls:'#a1a1a1',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), ), {num_notes: 5, notes_occupied: 4})).concat(score.tuplet([].concat(score.notes('B4/8', {walls:'#000000',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), score.notes('B4/8'), score.notes('B4/8', {walls:'#a7a5a5',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), score.notes('B4/8', {walls:'#0a0a0a',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), score.notes('B4/8', {walls:'#a59c9c',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), ), {num_notes: 5, notes_occupied: 4})).concat()",
+            "beam": [
+                4,
+                8,
+                5,
+                8
+            ]
+        },
+        {
+            "notes": "[].concat(score.tuplet([].concat(score.notes('B4/8', {walls:'#a59c9c',path:'#ff0000',trail:'#000000',player:'#000000',rest:'#d8db00'}), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), ), {num_notes: 5, notes_occupied: 4})).concat(score.tuplet([].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), ), {num_notes: 5, notes_occupied: 4})).concat()"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), )"
+        },
+        {
+            "notes": "[].concat(score.tuplet([].concat(tie([].concat(score.notes('B4/8', ), score.notes('B4/8'), tie([].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), ))))), {num_notes: 5, notes_occupied: 4})).concat(score.tuplet([].concat(score.notes('B4/8', ), tie([].concat(score.notes('B4/8'), score.notes('B4/8'), tie([].concat(score.notes('B4/8'), score.notes('B4/8'), ))))), {num_notes: 5, notes_occupied: 4})).concat()"
+        },
+        {
+            "notes": "[].concat(score.tuplet([].concat(tie([].concat(score.notes('B4/8', ), score.notes('B4/8'), tie([].concat(score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), ))))), {num_notes: 5, notes_occupied: 4})).concat(score.tuplet([].concat(score.notes('B4/8', ), tie([].concat(score.notes('B4/8'), score.notes('B4/8'), tie([].concat(score.notes('B4/8'), score.notes('B4/8'), ))))), {num_notes: 5, notes_occupied: 4})).concat()"
+        },
+        {
+            "notes": "[].concat(score.notes('D5/1/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('D5/1/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r', {walls:'#ff4d4d',path:'#f5f5f5',trail:'#e89696',player:'#000000',rest:'#363636'}), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8.'), tie([].concat(score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), )))",
+            "beam": [
+                2,
+                8,
+                2,
+                8
+            ]
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8.'), tie([].concat(score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), )))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r', {walls:'#4da3ff',path:'#f5f5f5',trail:'#96bae8',player:'#000000',rest:'#363636'}), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8.'), tie([].concat(score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), )))"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r'), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8.'), tie([].concat(score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), )))"
+        },
+        {
+            "notes": "[].concat(score.tuplet([].concat(score.notes('B4/4', {walls:'#8e09be',path:'#f5f5f5',trail:'#ac96e8',player:'#000000',rest:'#363636'}), score.notes('B4/4'), score.notes('B4/4'), ), {num_notes: 3, notes_occupied: 2})).concat(score.notes('B4/8/r'), score.notes('B4/8'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.tuplet([].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), ), {num_notes: 3, notes_occupied: 2})).concat(score.notes('B4/8/r'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), )"
+        },
+        {
+            "notes": "[].concat(score.tuplet([].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), ), {num_notes: 3, notes_occupied: 2})).concat(score.notes('B4/8/r'), score.notes('B4/8'), score.notes('B4/4'), )"
+        },
+        {
+            "notes": "[].concat(score.tuplet([].concat(score.notes('B4/4'), score.notes('B4/4'), score.notes('B4/4'), ), {num_notes: 3, notes_occupied: 2})).concat(score.notes('B4/8/r'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/8'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r', {walls:'#efc2ff',path:'#f5f5f5',trail:'#ffdbf0',player:'#000000',rest:'#c9c9c9'}), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('D5/1/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r', {walls:'#c2ffe8',path:'#f5f5f5',trail:'#ffdbf0',player:'#000000',rest:'#c9c9c9'}), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('D5/1/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r', {walls:'#ffc2c2',path:'#f5f5f5',trail:'#ffdbf0',player:'#000000',rest:'#c9c9c9'}), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('D5/1/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('B4/8/r', {walls:'#ecc2ff',path:'#f5f5f5',trail:'#ffdbf0',player:'#000000',rest:'#c9c9c9'}), score.notes('B4/16'), score.notes('B4/16'), score.notes('B4/8'), score.notes('B4/8'), score.notes('B4/2'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('D5/1/r'), )"
+        },
+        {
+            "notes": "[].concat(score.notes('D5/1/r'), )"
+        }
+    ]
+}
