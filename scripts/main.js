@@ -807,8 +807,10 @@ function play(){
     playerTrailPath.moveTo(0, canvas.height);
     var position;
 
+    const ctx = canvas.getContext("2d", {willReadFrequently: true});
+    
     function animate(){
-        const ctx = canvas.getContext("2d");
+        
         ctx.fillStyle = colorSet.walls;
         
         if (audio.ended){
